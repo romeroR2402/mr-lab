@@ -186,13 +186,18 @@ footer { font-size: 12px; color: var(--mute); font-family: var(--mono); }
       <div class="stage"><span class="num">E3</span><span class="name">Recuperación de datos y respaldos cifrados</span><span class="pill ok">Listo</span></div>
       <div class="stage"><span class="num">E4</span><span class="name">Análisis y recuperación de acceso</span><span class="pill ok">Listo</span></div>
       <div class="stage"><span class="num">E5</span><span class="name">Reparación de sistema y restauración de fábrica</span><span class="pill ok">Listo</span></div>
-      <div class="stage"><span class="num">E6</span><span class="name">Exportación y reportes</span><span class="pill todo">Pendiente</span></div>
+      <div class="stage"><span class="num">E6</span><span class="name">Exportación y reportes</span><span class="pill ok">Listo</span></div>
     </div>
   </section>
 
   <section aria-labelledby="install-title">
-    <h2 class="section-title" id="install-title">Probarlo en Windows</h2>
+    <h2 class="section-title" id="install-title">Instalar en Windows</h2>
     <div class="install">
+      <div class="box">
+        <h3>Instalador listo para usar</h3>
+        <p>Descarga el instalador de la última versión y ejecútalo. No necesitas instalar nada más para Android.</p>
+        <a class="btn primary" href="https://github.com/romeroR2402/mr-lab/releases/latest" target="_blank" rel="noopener">Descargar MRLab-Setup.exe</a>
+      </div>
       <div class="box">
         <h3>1. Descargar el proyecto</h3>
         <p>Requiere Git, Node.js 20+ y Python 3.11+.</p>
@@ -229,6 +234,7 @@ const SHOTS = [
   { id: "acceso", tab: "Acceso", title: "Análisis de recuperación de acceso", text: "Identifica los mecanismos de autenticación y las restricciones del equipo, y evalúa las vías oficiales del fabricante con requisitos, pasos y pérdida de datos." },
   { id: "modulos", tab: "Módulos", title: "Módulos de análisis extensibles", text: "Plugins de solo análisis con una política aplicada en el código: un módulo con capacidades prohibidas se rechaza sin ejecutarse." },
   { id: "expedientes", tab: "Expedientes", title: "Expedientes de servicio", text: "Folio, técnico, dispositivo, motivo, autorización del titular, estado, operaciones realizadas y evidencias del caso." },
+  { id: "reportes", tab: "Reporte PDF", title: "Reporte final del expediente", text: "Genera un PDF A4 con autorización, diagnósticos, evaluaciones, respaldos, operaciones y registro de evidencias verificado, listo para firmar por el técnico y el titular. También exporta los datos en JSON." },
   { id: "evidencias", tab: "Evidencias", title: "Registro de evidencias", text: "Registro automático de solo inserción encadenado con SHA-256. El botón de verificación detecta cualquier alteración." },
   { id: "configuracion", tab: "Configuración", title: "Configuración y componentes", text: "Motores Android y Apple integrados en el instalador, verificados por SHA-256, y modo autónomo para no depender de herramientas externas." },
 ];
