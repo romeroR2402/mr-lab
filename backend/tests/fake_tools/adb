@@ -9,7 +9,18 @@ if a[:2] == ["devices", "-l"]:
     print("R58N12ABCDE            device usb:1-1 product:a52qnsxx model:SM_A525F device:a52q transport_id:3")
     print("ZY22XXXXXX             unauthorized usb:1-2 transport_id:4")
     print("192.168.1.20:5555      device product:x model:Pixel_7 device:panther transport_id:5")
+    if __import__("os").environ.get("FAKE_SIDELOAD") == "1":
+        print("SIDE0001               sideload usb:1-5 transport_id:6")
     sys.exit(0)
+if a[:1] == ["-s"] and a[2] == "reboot":
+    log = __import__("os").environ.get("FAKE_ADB_LOG")
+    if log:
+        open(log, "a").write(" ".join(a) + "\n")
+    sys.exit(0)
+if a[:1] == ["-s"] and a[2] == "sideload":
+    for pct in (10, 47, 100):
+        sys.stdout.write(f"serving: '{a[3]}'  (~{pct}%)    \r"); sys.stdout.flush()
+    print("\nTotal xfer: 1.00x"); sys.exit(0)
 import os, shutil, subprocess
 ROOT = os.environ.get("FAKE_SDCARD")
 if a[:1] == ["-s"] and a[2] == "pull" and ROOT:
@@ -57,6 +68,12 @@ if a[:1] == ["-s"] and a[2] == "shell":
         print("false")
     elif cmd == "dumpsys device_policy":
         print("Device policy state:\n  Enabled Device Admins (User 0):\n")
+    elif cmd == "pm list packages -3":
+        print("package:com.example.juego\npackage:com.whatsapp")
+    elif cmd.startswith("pm uninstall --user 0 "):
+        print("Success")
+    elif cmd.startswith("pm trim-caches"):
+        pass
     elif cmd == "settings get global wifi_on":
         print("1")
     sys.exit(0)

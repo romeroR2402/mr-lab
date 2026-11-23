@@ -162,6 +162,30 @@ MIGRATIONS: list[str] = [
     );
     CREATE INDEX idx_backups_case ON backups(case_id);
     """,
+    # v5: reparación de sistema y restauración de fábrica
+    """
+    CREATE TABLE service_operations (
+        id            INTEGER PRIMARY KEY AUTOINCREMENT,
+        case_id       INTEGER NOT NULL REFERENCES cases(id),
+        device_serial TEXT NOT NULL,
+        device_label  TEXT,
+        op_id         TEXT NOT NULL,
+        title         TEXT NOT NULL,
+        grp           TEXT NOT NULL,
+        kind          TEXT NOT NULL,
+        method        TEXT NOT NULL,
+        impact        TEXT NOT NULL,
+        status        TEXT NOT NULL,
+        started_at    TEXT NOT NULL,
+        finished_at   TEXT,
+        technician    TEXT NOT NULL,
+        plan_json     TEXT NOT NULL,
+        output        TEXT,
+        report_path   TEXT,
+        report_sha256 TEXT
+    );
+    CREATE INDEX idx_service_case ON service_operations(case_id);
+    """,
 ]
 
 

@@ -23,7 +23,7 @@ y gestión de expedientes con registro de evidencias.
 | Asistente de pantalla dañada (clasificación + recomendaciones) | ✅ Implementado |
 | Centro de recuperación de datos (Android ADB, Apple, importación) | ✅ Implementado |
 | Análisis y recuperación de acceso (mecanismos, restricciones, vías oficiales, compatibilidad, plugins) | ✅ Implementado |
-| Reparación de sistema / Restauración de fábrica | ⏳ Etapa 5 |
+| Reparación de sistema / Restauración de fábrica (plan, confirmación, registro y reporte) | ✅ Implementado |
 | Exportación y reportes | ⏳ Etapa 6 |
 
 **Plataforma autónoma:** el instalador incluye sus propios motores y controladores, verificados por
@@ -42,6 +42,7 @@ Documentación:
 - [docs/INSTALL.md](docs/INSTALL.md) — instalación, requisitos y generación del instalador de Windows.
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — arquitectura, protocolo RPC, base de datos y seguridad.
 - [docs/AUTONOMIA.md](docs/AUTONOMIA.md) — componentes integrados y qué no puede eliminarse.
+- [docs/SERVICIO.md](docs/SERVICIO.md) — reparación de sistema y restauración de fábrica.
 - [docs/DATOS.md](docs/DATOS.md) — recuperación de datos y respaldos cifrados.
 - [docs/PANTALLA.md](docs/PANTALLA.md) — asistente de pantalla dañada.
 - [docs/ACCESO.md](docs/ACCESO.md) — módulo de análisis de acceso y guía de plugins.

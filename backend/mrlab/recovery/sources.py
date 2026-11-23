@@ -203,6 +203,7 @@ def apple_backup(job: Job, device, dest: Path) -> list[str]:
         if m:
             job.update(progress=int(m.group(1)) / 100 * 0.6)
     proc.wait()
+    proc.stdout.close()  # type: ignore[union-attr]
     if proc.returncode != 0:
         raise RpcError("backup_failed", "idevicebackup2 falló: " + " | ".join(t for t in tail if t)[:400])
     return []

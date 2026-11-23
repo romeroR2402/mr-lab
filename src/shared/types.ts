@@ -254,7 +254,7 @@ export type DataCategory = "photos" | "videos" | "documents" | "contacts" | "bac
 export type CategoryCounts = Record<DataCategory, { files: number; bytes: number }>;
 
 export interface Job {
-  id: number; kind: "backup" | "verify" | "export"; title: string; status: "running" | "done" | "failed" | "cancelled";
+  id: number; kind: "backup" | "verify" | "export" | "service"; title: string; status: "running" | "done" | "failed" | "cancelled";
   phase: string; progress: number | null; detail: string | null; result: Record<string, unknown> | null; error: string | null;
   startedAt: string; finishedAt: string | null;
 }
@@ -270,6 +270,27 @@ export interface BackupRecord {
   verifiedAt: string | null; verifyResult: "ok" | "sha_mismatch" | "failed" | null; status: string; present: boolean;
 }
 export interface BackupFile { path: string; category: DataCategory; size: number; mtime: string; sha256: string }
+
+export type Impact = "none" | "app_data" | "full_wipe";
+export interface ServiceOperation {
+  id: string; group: "repair" | "reset"; platform: Platform; kind: "auto" | "guided"; title: string; summary: string;
+  method: string; impact: Impact; impactLabel: string; modes: string[]; needsAuth: boolean; tool: string | null;
+  commands: string[]; steps: string[]; warnings: string[]; param: "file" | "package" | null;
+  available?: boolean; unavailableReason?: string | null;
+}
+export interface ServicePlan {
+  planId: string; operation: ServiceOperation; device: DeviceInfo; caseId: number; folio: string;
+  params: Record<string, string>; commands: string[];
+  checks: { id: string; label: string; result: "pass" | "warn" | "fail" | "unknown"; detail: string }[];
+  acknowledgements: { id: string; label: string }[]; confirmationPhrase: string; blocked: boolean;
+  blockedReason: string | null; createdAt: string; expiresInSeconds: number;
+}
+export interface ServiceResult { operationId: number; status: "success" | "failure"; report: string; output: string }
+export interface ServiceHistoryItem {
+  id: number; caseId: number; deviceSerial: string; deviceLabel: string | null; opId: string; title: string;
+  group: "repair" | "reset"; kind: "auto" | "guided"; method: string; impact: Impact; status: "success" | "failure";
+  startedAt: string; finishedAt: string | null; technician: string; reportPath: string | null; reportSha256: string | null;
+}
 
 /** Mapa método RPC -> [params, resultado]. */
 export interface RpcMethods {
@@ -312,6 +333,12 @@ export interface RpcMethods {
   "jobs.list": [Record<string, never>, Job[]];
   "jobs.get": [{ id: number }, Job];
   "jobs.cancel": [{ id: number }, Job];
+  "service.operations": [{ deviceKey: string; group?: "repair" | "reset" }, { device: DeviceInfo; operations: ServiceOperation[] }];
+  "service.packages": [{ deviceKey: string }, string[]];
+  "service.plan": [{ deviceKey: string; opId: string; caseId: number; params?: Record<string, string> }, ServicePlan];
+  "service.execute": [{ planId: string; confirmation: string; acknowledged: string[] }, Job];
+  "service.recordGuided": [{ planId: string; confirmation: string; acknowledged: string[]; result: "success" | "failure"; notes?: string }, ServiceResult];
+  "service.history": [{ caseId?: number; deviceSerial?: string }, ServiceHistoryItem[]];
   "evidence.verify": [Record<string, never>, { valid: boolean; checked: number; brokenAtId: number | null }];
 }
 

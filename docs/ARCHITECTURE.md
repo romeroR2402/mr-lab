@@ -39,6 +39,7 @@ backend/
     recovery/        Fuentes autorizadas, clasificación y creación de respaldos cifrados
     backups.py       Verificación, exploración, exportación y eliminación de respaldos
     jobs.py          Trabajos en segundo plano con progreso y cancelación
+    service/         Reparación y restauración: catálogo, plan/confirmación, ejecución y reporte HTML
     screen/          Asistente de pantalla dañada: cuestionario y motor de clasificación
     access/          Análisis de acceso: policy, analyzers, knowledge, compat, plugins, engine
   tests/             Pruebas unitarias y de integración (adb falso solo para pruebas)
@@ -67,7 +68,8 @@ rechaza llamadas pendientes si el backend termina y lo reinicia automáticamente
 | `jobs.list`, `.get`, `.cancel` | Trabajos de larga duración con progreso |
 | `screen.questionnaire`, `.assess`, `.history`, `.get` | Asistente de pantalla dañada (ver PANTALLA.md) |
 | `access.analyze`, `.history`, `.get`, `.procedures`, `.plugins`, `.setPlugin` | Análisis de acceso (ver ACCESO.md) |
-| `repair.start`, `reset.prepare`, `reports.export` | Responden `not_implemented` con la etapa planificada |
+| `service.operations`, `.packages`, `.plan`, `.execute`, `.recordGuided`, `.history` | Reparación y restauración (ver SERVICIO.md) |
+| `reports.export` | Responden `not_implemented` con la etapa planificada |
 
 ## Base de datos (SQLite)
 

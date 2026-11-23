@@ -15,6 +15,7 @@ from .access import engine as access_engine, plugins as access_plugins, policy a
 from .diagnostics import engine
 from .recovery import engine as recovery_engine, sources as recovery_sources
 from .screen import engine as screen_engine, questionnaire as screen_questions
+from .service import engine as service_engine
 from .errors import NotImplementedOperation, RpcError
 
 
@@ -98,9 +99,17 @@ METHODS: dict[str, Callable[[dict], object]] = {
     "jobs.list": lambda p: jobs.list_jobs(),
     "jobs.get": lambda p: jobs.get(_p(p, "id", int)),
     "jobs.cancel": lambda p: jobs.cancel(_p(p, "id", int)),
+    "service.operations": lambda p: service_engine.list_operations(_p(p, "deviceKey", str), _p(p, "group", str, None)),
+    "service.packages": lambda p: service_engine.third_party_packages(_p(p, "deviceKey", str)),
+    "service.plan": lambda p: service_engine.plan(_p(p, "deviceKey", str), _p(p, "opId", str), _p(p, "caseId", int, None),
+                                                  _p(p, "params", dict, {})),
+    "service.execute": lambda p: service_engine.execute(_p(p, "planId", str), _p(p, "confirmation", str, ""),
+                                                        [str(x) for x in _p(p, "acknowledged", list, [])]),
+    "service.recordGuided": lambda p: service_engine.record_guided(_p(p, "planId", str), _p(p, "confirmation", str, ""),
+                                                                   [str(x) for x in _p(p, "acknowledged", list, [])],
+                                                                   _p(p, "result", str), _p(p, "notes", str, None)),
+    "service.history": lambda p: service_engine.history(_p(p, "caseId", int, None), _p(p, "deviceSerial", str, None)),
     # Operaciones de etapas posteriores: responden explícitamente "no implementado".
-    "repair.start": _not_impl("Reparación de sistema", "Etapa 5"),
-    "reset.prepare": _not_impl("Restauración de fábrica", "Etapa 5"),
     "reports.export": _not_impl("Exportación de reportes", "Etapa 6"),
 }
 

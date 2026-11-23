@@ -17,8 +17,8 @@ export const NAV: { id: PageId; label: string; icon: typeof Activity; stage?: nu
   { id: "data-recovery", label: "Recuperación de datos", icon: Archive },
   { id: "backup-manager", label: "Respaldos", icon: DatabaseBackup },
   { id: "access-recovery", label: "Recuperación de acceso", icon: KeyRound },
-  { id: "system-repair", label: "Reparación de sistema", icon: Wrench, stage: 5 },
-  { id: "reset-center", label: "Restauración de fábrica", icon: RotateCcw, stage: 5 },
+  { id: "system-repair", label: "Reparación de sistema", icon: Wrench },
+  { id: "reset-center", label: "Restauración de fábrica", icon: RotateCcw },
   { id: "case-files", label: "Expedientes", icon: FolderKanban },
   { id: "settings", label: "Configuración", icon: Settings },
 ];

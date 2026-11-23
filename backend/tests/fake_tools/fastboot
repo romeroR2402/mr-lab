@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+"""fastboot FALSO solo para pruebas."""
+import os
+import sys
+a = sys.argv[1:]
+unlocked = os.environ.get("FAKE_FB_UNLOCKED", "yes")
+log = os.environ.get("FAKE_FB_LOG")
+if log:
+    open(log, "a").write(" ".join(a) + "\n")
+if a[:1] == ["--version"]:
+    print("fastboot version 35.0.2"); sys.exit(0)
+if a[:2] == ["devices", "-l"]:
+    print("FB0012345              fastboot usb:1-4"); sys.exit(0)
+if a[:1] == ["-s"] and a[2:] == ["getvar", "all"]:
+    print(f"(bootloader) unlocked:{unlocked}\n(bootloader) product:panther\n(bootloader) secure:yes\nall: Done!!", file=sys.stderr); sys.exit(0)
+if a[:1] == ["-s"] and a[2:] == ["-w"]:
+    if unlocked != "yes":
+        print("Erasing 'userdata' FAILED (remote: 'Erase is not allowed in Lock State')", file=sys.stderr); sys.exit(1)
+    print("Erasing 'userdata' OKAY [ 1.234s]", file=sys.stderr); sys.exit(0)
+if a[:1] == ["-s"] and a[2:] == ["reboot"]:
+    print("Rebooting OKAY", file=sys.stderr); sys.exit(0)
+sys.exit(1)

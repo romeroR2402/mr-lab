@@ -10,8 +10,8 @@ import CaseFiles from "./pages/CaseFiles";
 import Dashboard from "./pages/Dashboard";
 import Devices from "./pages/Devices";
 import Diagnostics from "./pages/Diagnostics";
-import PlannedModule from "./pages/PlannedModule";
 import ScreenRecovery from "./pages/ScreenRecovery";
+import ServiceCenter from "./pages/ServiceCenter";
 import SettingsPage from "./pages/Settings";
 
 export default function App() {
@@ -95,9 +95,8 @@ export default function App() {
             {page === "access-recovery" && <AccessRecovery />}
             {page === "case-files" && <CaseFiles />}
             {page === "settings" && <SettingsPage />}
-            {["system-repair", "reset-center"].includes(page) && (
-              <PlannedModule moduleId={page} />
-            )}
+            {page === "system-repair" && <ServiceCenter group="repair" />}
+            {page === "reset-center" && <ServiceCenter group="reset" />}
           </div>
         </main>
       </div>

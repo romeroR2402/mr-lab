@@ -33,7 +33,9 @@ Detección de mecanismos de autenticación y restricciones por interfaces oficia
 motor de compatibilidad, escenarios con pantalla/táctil dañados y plugins de solo análisis con barreras de política.
 Ver [ACCESO.md](ACCESO.md). Pendiente: ampliar el catálogo por fabricante (Samsung, Xiaomi, Motorola…).
 
-## Etapa 5 — Reparación de sistema y restauración de fábrica
+## Etapa 5 — Reparación de sistema y restauración de fábrica ✅
+Implementado. Ver [SERVICIO.md](SERVICIO.md).
+
 Sideload de OTA oficial, modo recuperación, restauración asistida (Apple Devices/Finder, herramientas OEM).
 Restauración de fábrica solo por métodos del fabricante con advertencia, confirmación, registro y reporte.
 
