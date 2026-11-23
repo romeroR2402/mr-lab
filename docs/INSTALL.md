@@ -108,6 +108,7 @@ Respaldar esta carpeta conserva todo el historial. MR Lab no envía datos a serv
 | Síntoma | Causa probable / acción |
 |---|---|
 | Samsung (u otra marca) conectado y «No hay dispositivos» | Falta el controlador USB del fabricante en Windows. MR Lab lo detecta y muestra un aviso con el enlace oficial (Samsung: developer.samsung.com/android-usb-driver). Instálelo y reconecte el cable. |
+| Honor / Huawei: «Dispositivo de almacenamiento USB» y 0 detectados | El teléfono está en modo «Solo carga», en el que estas marcas desactivan la depuración USB. Elija «Transferir archivos» en el aviso de USB del teléfono o active «Permitir depuración ADB en modo Solo carga». Controlador: HONOR Suite / HiSuite. |
 | "Motor Android no disponible" | El componente integrado falta o fue alterado: reinstale MR Lab. |
 | Dispositivo "Sin autorizar" | Acepte el diálogo de depuración USB; revoque autorizaciones y reconecte si no aparece. |
 | Dispositivo "Sin permisos USB" | Falta el controlador USB del fabricante (Windows) o reglas udev (Linux). |

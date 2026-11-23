@@ -29,6 +29,20 @@ class UsbWindowsTests(unittest.TestCase):
         mtp = [e for e in SAMSUNG_NO_DRIVER if "MI_01" not in e["DeviceID"]]
         self.assertEqual(analyze(mtp)[0]["diagnosis"], "no_adb_interface")
 
+    def test_honor(self):
+        honor = [{"Name": "HONOR 90", "DeviceID": "USB\\VID_339B&PID_107E&MI_00\\7&1", "PNPClass": "WPD", "ConfigManagerErrorCode": 0}]
+        p = analyze(honor)[0]
+        self.assertEqual((p["vendor"], p["diagnosis"]), ("Honor", "no_adb_interface"))
+        self.assertIn("modo Solo carga", p["message"])
+        self.assertIn("HONOR Suite", p["message"])
+
+    def test_charge_only_mass_storage(self):
+        # Caso real observado: Honor/Huawei en «Solo carga» se presenta como almacenamiento USB.
+        res = analyze([{"Name": "Dispositivo de almacenamiento USB", "DeviceID": "USB\\VID_12D1&PID_107E\\ABC123",
+                        "PNPClass": "USB", "ConfigManagerErrorCode": 0}])
+        self.assertEqual(res[0]["diagnosis"], "charge_only")
+        self.assertIn("Transferir archivos", res[0]["message"])
+
     def test_apple_and_unrelated(self):
         res = analyze([{"Name": "Apple Mobile Device USB Composite Device", "DeviceID": "USB\\VID_05AC&PID_12A8\\00008101",
                         "PNPClass": "USB", "ConfigManagerErrorCode": 0}])

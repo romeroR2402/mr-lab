@@ -73,6 +73,10 @@ def scan() -> dict:
                     usb_hints.append(h)
                 elif h["vendor"] != "Apple" and android_seen == 0:
                     usb_hints.append(h)
+            # En Windows, el aviso de motor Apple solo es útil si hay un dispositivo Apple conectado.
+            from . import config
+            if config.IS_WINDOWS and not any(h["vendor"] == "Apple" for h in usb_hints):
+                errors = [e for e in errors if not e.startswith("Motor Apple no disponible")]
         except Exception as e:  # el diagnóstico nunca debe romper el escaneo
             errors.append(f"No se pudo consultar los dispositivos USB de Windows: {e}")
         _last.update({

@@ -19,7 +19,8 @@ VENDORS = {
     "18D1": ("Google / genérico Android", None),
     "2717": ("Xiaomi", "https://developer.android.com/studio/run/oem-usb"),
     "22B8": ("Motorola", "https://developer.android.com/studio/run/oem-usb"),
-    "12D1": ("Huawei", "https://developer.android.com/studio/run/oem-usb"),
+    "12D1": ("Huawei / Honor (modelos anteriores a 2021)", None),
+    "339B": ("Honor", None),
     "22D9": ("OPPO / realme", "https://developer.android.com/studio/run/oem-usb"),
     "2A70": ("OnePlus", "https://developer.android.com/studio/run/oem-usb"),
     "1004": ("LG", "https://developer.android.com/studio/run/oem-usb"),
@@ -27,6 +28,15 @@ VENDORS = {
     "2D95": ("vivo", "https://developer.android.com/studio/run/oem-usb"),
     "0BB4": ("HTC", "https://developer.android.com/studio/run/oem-usb"),
     "05AC": ("Apple", None),
+}
+# Indicaciones específicas por fabricante (controlador y ajustes del teléfono).
+VENDOR_TIPS = {
+    "Samsung": "Instale «Samsung Android USB Driver for Windows» desde la web de desarrolladores de Samsung.",
+    "Honor": ("Instale HONOR Suite desde la web oficial de Honor (incluye el controlador USB). En el teléfono active "
+              "«Permitir depuración ADB en modo Solo carga» o elija «Transferir archivos» al conectar."),
+    "Huawei / Honor (modelos anteriores a 2021)": (
+        "Instale HiSuite desde la web oficial de Huawei (incluye el controlador USB). En el teléfono active "
+        "«Permitir depuración ADB en modo Solo carga» o elija «Transferir archivos» al conectar."),
 }
 _VID = re.compile(r"VID_([0-9A-F]{4})", re.I)
 _cache: dict = {"at": 0.0, "value": None}
@@ -54,13 +64,16 @@ def analyze(entries: list[dict]) -> list[dict]:
         vendor, driver_url = VENDORS[vid]
         # Windows registra cada interfaz (MTP, ADB…) con su propio ID: se agrupan por fabricante.
         p = phones.setdefault(vid, {"vendor": vendor, "vid": vid, "driverUrl": driver_url, "interfaces": [],
-                                    "adb": None, "adbOk": False, "missingDriver": False, "mtp": False})
+                                    "adb": None, "adbOk": False, "missingDriver": False, "mtp": False, "storage": False})
         code = e.get("ConfigManagerErrorCode")
         p["interfaces"].append({"name": e.get("Name"), "class": e.get("PNPClass"), "errorCode": code})
         if code not in (0, None):
             p["missingDriver"] = True
-        if (e.get("PNPClass") or "") == "WPD" or "mtp" in (e.get("Name") or "").lower():
+        name_l = (e.get("Name") or "").lower()
+        if (e.get("PNPClass") or "") == "WPD" or "mtp" in name_l:
             p["mtp"] = True
+        if (e.get("PNPClass") or "") in ("DiskDrive", "CDROM") or "almacenamiento" in name_l or "mass storage" in name_l:
+            p["storage"] = True
         if _is_adb(e):
             p["adb"] = e.get("Name")
             p["adbOk"] = code == 0
@@ -76,14 +89,23 @@ def analyze(entries: list[dict]) -> list[dict]:
         elif p["missingDriver"]:
             p["diagnosis"] = "missing_driver"
             p["message"] = (f"Windows detecta el teléfono {p['vendor']}, pero una de sus interfaces no tiene controlador. "
-                            f"Instale el controlador USB oficial de {p['vendor']} y vuelva a conectar el cable.")
+                            + VENDOR_TIPS.get(p["vendor"], f"Instale el controlador USB oficial de {p['vendor']}.")
+                            + " Después vuelva a conectar el cable.")
+        elif p["storage"] and not p["mtp"] and not p["adb"]:
+            p["diagnosis"] = "charge_only"
+            p["message"] = ("El teléfono está en modo «Solo carga»: se presenta como unidad de almacenamiento y no expone la "
+                            "depuración USB. En el teléfono, toque el aviso de USB y elija «Transferir archivos», o active "
+                            "«Permitir depuración ADB en modo Solo carga» en Opciones de desarrollador. Después acepte "
+                            "«¿Permitir depuración USB?».")
         elif p["mtp"]:
             p["diagnosis"] = "no_adb_interface"
-            p["message"] = ("El teléfono está conectado solo para transferir archivos: no expone la interfaz de depuración. "
-                            "Active «Depuración USB» en Opciones de desarrollador y vuelva a conectar el cable.")
+            p["message"] = ("El teléfono está conectado sin la interfaz de depuración. Active «Depuración USB» en Opciones de "
+                            "desarrollador y vuelva a conectar el cable."
+                            + (" " + VENDOR_TIPS[p["vendor"]] if p["vendor"] in VENDOR_TIPS else ""))
         else:
             p["diagnosis"] = "unknown"
-            p["message"] = "Windows detecta el teléfono pero sin interfaz de depuración. Revise la depuración USB y el cable."
+            p["message"] = ("Windows detecta el teléfono pero sin interfaz de depuración. Revise la depuración USB y el cable."
+                            + (" " + VENDOR_TIPS[p["vendor"]] if p["vendor"] in VENDOR_TIPS else ""))
         out.append(p)
     return out
 
