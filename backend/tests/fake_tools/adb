@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+"""adb FALSO solo para pruebas: reproduce salidas capturadas de adb real."""
+import sys
+a = sys.argv[1:]
+if a[:1] == ["version"]:
+    print("Android Debug Bridge version 1.0.41\nVersion 35.0.2-12147458"); sys.exit(0)
+if a[:2] == ["devices", "-l"]:
+    print("List of devices attached")
+    print("R58N12ABCDE            device usb:1-1 product:a52qnsxx model:SM_A525F device:a52q transport_id:3")
+    print("ZY22XXXXXX             unauthorized usb:1-2 transport_id:4")
+    print("192.168.1.20:5555      device product:x model:Pixel_7 device:panther transport_id:5")
+    sys.exit(0)
+if a[:1] == ["-s"] and a[2] == "shell":
+    cmd = a[3]
+    if cmd == "getprop":
+        for k, v in {"ro.product.manufacturer": "samsung", "ro.product.model": "SM-A525F", "ro.product.device": "a52q",
+                     "ro.build.version.release": "14", "ro.build.version.sdk": "34", "ro.crypto.state": "encrypted",
+                     "ro.crypto.type": "file", "ro.boot.verifiedbootstate": "green", "ro.boot.flash.locked": "1"}.items():
+            print(f"[{k}]: [{v}]")
+    elif cmd == "dumpsys battery":
+        print("Current Battery Service state:\n  AC powered: false\n  USB powered: true\n  status: 2\n  health: 2\n  level: 54\n  scale: 100\n  voltage: 3912\n  temperature: 312\n  technology: Li-ion")
+    elif cmd == "df -k /data":
+        print("Filesystem      1K-blocks     Used Available Use% Mounted on\n/dev/block/dm-48 113524628 98000000 15524628  87% /data")
+    elif cmd == "cat /proc/meminfo":
+        print("MemTotal:        5668880 kB\nMemFree:          200000 kB\nMemAvailable:    2100000 kB")
+    elif cmd == "wm size":
+        print("Physical size: 1080x2400")
+    elif cmd == "wm density":
+        print("Physical density: 450")
+    elif cmd == "dumpsys power":
+        print("  mWakefulness=Awake\nDisplay Power: state=ON")
+    elif cmd == "dumpsys input":
+        print("Event Hub State:\n  Devices:\n    -1: Virtual\n      Classes: KEYBOARD | ALPHAKEY\n    3: sec_touchscreen\n      Classes: TOUCH | TOUCH_MT\n")
+    elif cmd == "cat /proc/uptime":
+        print("7384.12 20000.00")
+    elif cmd == "settings get global wifi_on":
+        print("1")
+    sys.exit(0)
+sys.exit(1)

@@ -1,0 +1,32 @@
+from __future__ import annotations
+
+from . import cases, evidence, scanner, tools
+from .diagnostics import engine
+
+
+def summary() -> dict:
+    scan = scanner.last_scan()
+    devices = scan.get("devices") or []
+    primary = devices[0] if devices else None
+    diag = engine.latest_for(primary["serial"]) if primary else None
+    screen = None
+    if diag:
+        disp = next((c for c in diag["checks"] if c["id"] == "display"), None)
+        touch = next((c for c in diag["checks"] if c["id"] == "touch"), None)
+        screen = {"display": disp, "touch": touch}
+    t = tools.detect()
+    return {
+        "primaryDevice": primary,
+        "deviceCount": len(devices),
+        "scannedAt": scan.get("scannedAt"),
+        "scanErrors": scan.get("errors") or [],
+        "lastDiagnostic": diag,
+        "screen": screen,
+        "recoveryChannels": engine.recovery_channels(primary) if primary else [],
+        "recentCases": cases.list_cases(limit=6),
+        "caseStats": cases.stats(),
+        "evidenceCount": evidence.list_entries(limit=1)["total"],
+        "tools": {x["id"]: x["installed"] for x in t["tools"]},
+        "appleService": t["appleService"],
+        "encryption": t["encryption"],
+    }

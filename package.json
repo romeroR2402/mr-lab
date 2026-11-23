@@ -1,0 +1,45 @@
+{
+  "name": "mr-lab",
+  "productName": "Mobile Recovery Lab",
+  "version": "0.1.0",
+  "description": "Estación de trabajo técnica para diagnóstico y recuperación autorizada de dispositivos móviles.",
+  "author": "MR Lab",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "dist/main/main/index.js",
+  "scripts": {
+    "dev": "concurrently -k -n renderer,main,electron \"npm:dev:renderer\" \"npm:dev:main\" \"npm:dev:electron\"",
+    "dev:renderer": "vite",
+    "dev:main": "tsc -p tsconfig.main.json --watch --preserveWatchOutput",
+    "dev:electron": "wait-on tcp:5173 dist/main/main/index.js && cross-env MRLAB_DEV=1 electron .",
+    "build": "npm run build:main && npm run build:renderer",
+    "build:main": "tsc -p tsconfig.main.json",
+    "build:renderer": "vite build",
+    "typecheck": "tsc -p tsconfig.main.json --noEmit && tsc -p tsconfig.renderer.json --noEmit",
+    "test:backend": "cd backend && python -m unittest discover -s tests -t .",
+    "build:backend": "cd backend && pyinstaller --noconfirm --clean mrlab-backend.spec",
+    "dist:win": "npm run build && electron-builder --win nsis --x64",
+    "start": "electron ."
+  },
+  "dependencies": {
+    "lucide-react": "^0.460.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.0",
+    "cross-env": "^7.0.3",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11",
+    "wait-on": "^8.0.1"
+  }
+}

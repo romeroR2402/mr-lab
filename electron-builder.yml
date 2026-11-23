@@ -1,0 +1,32 @@
+appId: com.mrlab.mobilerecoverylab
+productName: Mobile Recovery Lab
+copyright: Copyright © 2026 MR Lab
+directories:
+  output: release
+  buildResources: build
+files:
+  - dist/**/*
+  - package.json
+  - "!**/*.map"
+extraResources:
+  # Backend Python congelado con PyInstaller (npm run build:backend)
+  - from: backend/dist/mrlab-backend
+    to: backend
+  # Herramientas opcionales redistribuibles (platform-tools, libimobiledevice)
+  - from: resources/tools
+    to: tools
+asar: true
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  artifactName: MRLab-Setup-${version}.exe
+  requestedExecutionLevel: asInvoker
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Mobile Recovery Lab
+  deleteAppDataOnUninstall: false
