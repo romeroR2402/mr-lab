@@ -14,5 +14,5 @@ Descarga **MRLab-Setup-*.exe**, ejecútalo y sigue el asistente en español. Pid
 
 **Notas**
 - El instalador no está firmado digitalmente, así que Windows SmartScreen puede mostrar «Windows protegió su PC». Pulsa *Más información → Ejecutar de todas formas*.
-- Para iPhone/iPad, Windows necesita la app gratuita *Apple Devices*; MR Lab ofrece un botón para instalarla. El motor Apple (libimobiledevice) aún no se incluye en esta versión.
+- Para iPhone/iPad, Windows necesita además la app gratuita *Apple Devices* (MR Lab ofrece un botón para instalarla). El motor Apple (libimobiledevice, LGPL-2.1) se integra al compilar; compruebe en Configuración → Componentes que aparece como «Verificado».
 - Página del proyecto: https://romeror2402.github.io/mr-lab/

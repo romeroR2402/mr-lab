@@ -181,8 +181,13 @@ def recommend(cat: str, a: dict, s: dict) -> list[dict]:
         recs.append(_rec("apple_av", "Adaptador de video y teclado (iPhone/iPad)", 2, "Acceso", [
             "Conectar un adaptador AV digital Lightning o USB-C a HDMI: replica la pantalla en un monitor.",
             "En modelos con USB-C, un teclado USB permite introducir el código del titular.",
-            "Con la imagen en el monitor, el titular desbloquea y acepta 'Confiar en este equipo'."],
-            requirements=["Adaptador oficial o compatible", "El titular introduce su código"]))
+            "Con la imagen en el monitor, el titular desbloquea y acepta 'Confiar en este equipo'.",
+            "Si el táctil no responde: conectar un teclado (USB-C directo, o en Lightning con el adaptador de cámara Lightning a USB) "
+            "y escribir el código. Para pulsar «Confiar», pedir a Siri «Activa VoiceOver» y moverse con el teclado (flechas y espacio).",
+            "Alternativa: si el titular tiene un ordenador en el que ya confiaba este iPhone, el respaldo puede hacerse allí "
+            "con Apple Devices / Finder sin aceptar nada nuevo en la pantalla."],
+            requirements=["Adaptador oficial o compatible", "El titular introduce su código",
+                          "Siri disponible con el equipo bloqueado (para activar VoiceOver)"]))
     if needs_input and a["usb_debug_before"] == "yes" and android:
         recs.append(_rec("mirror", "Duplicación de pantalla en el PC (depuración ya autorizada)", 2, "Acceso", [
             "Si el PC ya estaba autorizado antes del daño, se puede ver y controlar la pantalla desde el PC.",

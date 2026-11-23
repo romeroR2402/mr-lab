@@ -38,6 +38,38 @@ jobs:
         continue-on-error: true
         run: python scripts/fetch_components.py --only android-usb-driver --strict
 
+      # Motor Apple: libimobiledevice (LGPL-2.1) compilado por MSYS2 para Windows.
+      # Si falla, el instalador se publica igualmente con el motor Android.
+      - name: Instalar libimobiledevice (MSYS2)
+        id: apple
+        continue-on-error: true
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: false
+          install: mingw-w64-x86_64-libimobiledevice
+
+      - name: Reunir motor Apple y sus bibliotecas
+        id: apple_collect
+        if: steps.apple.outcome == 'success'
+        continue-on-error: true
+        shell: msys2 {0}
+        run: |
+          set -e
+          mkdir -p apple_engine
+          for t in idevice_id ideviceinfo idevicepair idevicediagnostics idevicebackup2 ideviceenterrecovery; do
+            cp "/mingw64/bin/$t.exe" apple_engine/
+          done
+          for f in apple_engine/*.exe; do ldd "$f"; done | awk '{print $3}' | grep -i '^/mingw64/' | sort -u | xargs -I{} cp {} apple_engine/
+          mkdir -p apple_engine/licencias
+          cp -r /mingw64/share/licenses/libimobiledevice apple_engine/licencias/ 2>/dev/null || true
+          ls -la apple_engine
+
+      - name: Integrar motor Apple
+        if: steps.apple_collect.outcome == 'success'
+        continue-on-error: true
+        run: python scripts/fetch_components.py --only libimobiledevice --local libimobiledevice=apple_engine --strict
+
       - name: Empaquetar servicios locales (PyInstaller)
         working-directory: backend
         run: pyinstaller --noconfirm --clean mrlab-backend.spec

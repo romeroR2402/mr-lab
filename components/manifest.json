@@ -33,7 +33,7 @@
       "dest": "tools/libimobiledevice",
       "required": ["idevice_id.exe", "ideviceinfo.exe", "idevicepair.exe", "idevicediagnostics.exe", "idevicebackup2.exe"],
       "license": "LGPL-2.1",
-      "note": "Indique la URL de una compilación para Windows x64 que haya validado, o use --local libimobiledevice=RUTA."
+      "note": "En GitHub Actions se integra desde MSYS2 (mingw-w64-x86_64-libimobiledevice). Localmente: --local libimobiledevice=RUTA."
     }
   ]
 }
