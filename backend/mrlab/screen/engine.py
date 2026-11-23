@@ -163,8 +163,13 @@ def recommend(cat: str, a: dict, s: dict) -> list[dict]:
         recs.append(_rec("otg_input", "Ratón o teclado por OTG (Android)", 2, "Acceso", [
             "Conectar un adaptador OTG (USB-C/micro-USB a USB-A) con ratón o teclado.",
             "Con imagen: usar el puntero del ratón para desbloquear y aceptar diálogos.",
-            "Sin imagen: con teclado, pulsar una tecla para despertar, escribir el PIN del titular y Enter."],
-            requirements=["El equipo soporta OTG", "El titular introduce su credencial"],
+            "Sin imagen: con teclado, pulsar una tecla para despertar, escribir el PIN del titular y Enter.",
+            "Con el ratón, en Opciones de desarrollador: activar «Depuración USB», «Permitir depuración ADB en modo Solo carga» "
+            "(Honor/Huawei) y «Configuración USB predeterminada: Transferencia de archivos».",
+            "Emparejar un ratón Bluetooth: al conectar el cable del PC se pierde el ratón OTG y hará falta para aceptar "
+            "«¿Permitir depuración USB?».",
+            "Conectar el cable al PC y aceptar la autorización con el ratón Bluetooth (marcar «Permitir siempre»)."],
+            requirements=["El equipo soporta OTG", "El titular introduce su credencial", "Ratón Bluetooth para aceptar la autorización del PC"],
             risks=["Sin imagen, la entrada es a ciegas: verificar el resultado por USB en Detección de dispositivos"]))
     if cat in ("black_screen", "partial_display") and android:
         recs.append(_rec("video_out", "Salida de video USB-C (Android)", 2, "Acceso", [
