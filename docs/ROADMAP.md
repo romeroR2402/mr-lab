@@ -20,7 +20,9 @@ clasificación en: visible y táctil funcional; visible con táctil defectuoso; 
 sin respuesta; comunicación USB disponible; respaldo previo disponible. Recomendaciones técnicas por caso
 (mouse/teclado OTG, salida de video, duplicación de pantalla con depuración ya autorizada, reemplazo de panel, etc.).
 
-## Etapa 3 — Centro de recuperación de datos y respaldos
+## Etapa 3 — Centro de recuperación de datos y respaldos ✅
+Implementado. Ver [DATOS.md](DATOS.md). Pendiente: vista previa de imágenes dentro del visor.
+
 Copia del almacenamiento compartido vía `adb pull` (dispositivo autorizado), respaldos Apple con
 `idevicebackup2`, importación de respaldos/carpetas, clasificación (fotos, videos, documentos, archivos,
 contactos cuando la interfaz lo permita), visor, exportación con hash SHA-256 y cifrado AES-256-GCM.

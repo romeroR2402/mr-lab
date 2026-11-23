@@ -198,12 +198,12 @@ def recommend(cat: str, a: dict, s: dict) -> list[dict]:
             recs.append(_rec("backup_now", "Respaldar ahora: el equipo ya está autorizado", 1, "Datos", [
                 "No reiniciar ni desconectar el equipo: la autorización actual permite respaldar.",
                 "Ejecutar un respaldo por la interfaz autorizada (ADB o respaldo oficial de Apple)."],
-                module="data-recovery", implemented=False))
+                module="data-recovery", implemented=True))
         else:
             recs.append(_rec("backup_after_access", "Respaldar tras recuperar la interacción", 2, "Datos", [
                 "Con alguna de las vías anteriores, el titular desbloquea y autoriza este equipo.",
                 "Ejecutar el respaldo por interfaz autorizada antes de reemplazar componentes."],
-                module="data-recovery", implemented=False))
+                module="data-recovery", implemented=True))
         if a["backup"] in ("yes", "maybe"):
             recs.append(_rec("verify_backup", "Verificar el respaldo existente del titular", 2, "Datos", [
                 "Confirmar con el titular la fecha y el contenido del último respaldo (Google One / iCloud / PC).",

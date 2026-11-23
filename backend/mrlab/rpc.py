@@ -10,9 +10,10 @@ import traceback
 from concurrent.futures import ThreadPoolExecutor
 from typing import Callable
 
-from . import cases, components, config, dashboard, db, evidence, modules, scanner, settings, tools
+from . import backups, cases, components, config, jobs, dashboard, db, evidence, modules, scanner, settings, tools
 from .access import engine as access_engine, plugins as access_plugins, policy as access_policy
 from .diagnostics import engine
+from .recovery import engine as recovery_engine, sources as recovery_sources
 from .screen import engine as screen_engine, questionnaire as screen_questions
 from .errors import NotImplementedOperation, RpcError
 
@@ -37,6 +38,13 @@ def _update_settings(p: dict) -> dict:
     out = settings.update(_p(p, "values", dict))
     tools.invalidate()  # las rutas de herramientas pueden haber cambiado
     return out
+
+
+def _device(p: dict):
+    dev = scanner.get_cached(_p(p, "deviceKey", str))
+    if dev is None:
+        raise RpcError("device_not_found", "El dispositivo no está conectado.")
+    return dev
 
 
 def _not_impl(name: str, stage: str):
@@ -77,9 +85,20 @@ METHODS: dict[str, Callable[[dict], object]] = {
                                                     _p(p, "caseId", int, None), _p(p, "deviceLabel", str, None)),
     "screen.history": lambda p: screen_engine.history(_p(p, "deviceSerial", str, None)),
     "screen.get": lambda p: screen_engine.get(_p(p, "id", int)),
+    "recovery.folders": lambda p: recovery_sources.ANDROID_FOLDERS,
+    "recovery.scan": lambda p: recovery_sources.android_scan(_device(p), [str(x) for x in _p(p, "paths", list)]),
+    "recovery.start": lambda p: recovery_engine.create(p),
+    "backups.list": lambda p: backups.list_backups(_p(p, "caseId", int, None)),
+    "backups.get": lambda p: backups.get(_p(p, "id", int)),
+    "backups.browse": lambda p: backups.browse(_p(p, "id", int), _p(p, "passphrase", str)),
+    "backups.verify": lambda p: backups.verify(_p(p, "id", int), _p(p, "passphrase", str)),
+    "backups.export": lambda p: backups.export(_p(p, "id", int), _p(p, "passphrase", str),
+                                               _p(p, "categories", list, None), _p(p, "paths", list, None)),
+    "backups.delete": lambda p: backups.delete(_p(p, "id", int), _p(p, "confirmation", str)),
+    "jobs.list": lambda p: jobs.list_jobs(),
+    "jobs.get": lambda p: jobs.get(_p(p, "id", int)),
+    "jobs.cancel": lambda p: jobs.cancel(_p(p, "id", int)),
     # Operaciones de etapas posteriores: responden explícitamente "no implementado".
-    "recovery.start": _not_impl("Recuperación de datos", "Etapa 3"),
-    "backup.create": _not_impl("Creación de respaldo", "Etapa 3"),
     "repair.start": _not_impl("Reparación de sistema", "Etapa 5"),
     "reset.prepare": _not_impl("Restauración de fábrica", "Etapa 5"),
     "reports.export": _not_impl("Exportación de reportes", "Etapa 6"),
@@ -117,6 +136,7 @@ class Server:
 
     def serve(self) -> None:
         db.migrate()
+        recovery_engine.cleanup_staging()  # restos en texto plano de trabajos interrumpidos
         self.send({"event": "ready", "data": {"version": config.VERSION}})
         for line in self.inp:
             line = line.strip()

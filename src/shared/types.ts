@@ -250,6 +250,27 @@ export interface ScreenHistoryItem {
   category: ScreenCategory; categoryLabel: string;
 }
 
+export type DataCategory = "photos" | "videos" | "documents" | "contacts" | "backups" | "files";
+export type CategoryCounts = Record<DataCategory, { files: number; bytes: number }>;
+
+export interface Job {
+  id: number; kind: "backup" | "verify" | "export"; title: string; status: "running" | "done" | "failed" | "cancelled";
+  phase: string; progress: number | null; detail: string | null; result: Record<string, unknown> | null; error: string | null;
+  startedAt: string; finishedAt: string | null;
+}
+export interface RemoteFolder { id: string; path: string; label: string }
+export interface RecoveryScan {
+  folders: { path: string; exists: boolean; files: number; bytes: number }[];
+  categories: CategoryCounts; totalFiles: number; totalBytes: number;
+}
+export interface BackupRecord {
+  id: number; createdAt: string; caseId: number; folio: string; source: string; sourceLabel: string;
+  deviceSerial: string | null; deviceLabel: string | null; fileName: string; containerBytes: number; plainBytes: number;
+  fileCount: number; categories: CategoryCounts; containerSha256: string; warnings: string[];
+  verifiedAt: string | null; verifyResult: "ok" | "sha_mismatch" | "failed" | null; status: string; present: boolean;
+}
+export interface BackupFile { path: string; category: DataCategory; size: number; mtime: string; sha256: string }
+
 /** Mapa método RPC -> [params, resultado]. */
 export interface RpcMethods {
   "system.health": [Record<string, never>, HealthInfo];
@@ -279,6 +300,18 @@ export interface RpcMethods {
   "screen.assess": [{ answers: Record<string, string>; deviceKey?: string | null; caseId?: number | null; deviceLabel?: string }, ScreenAssessment];
   "screen.history": [{ deviceSerial?: string }, ScreenHistoryItem[]];
   "screen.get": [{ id: number }, ScreenAssessment];
+  "recovery.folders": [Record<string, never>, RemoteFolder[]];
+  "recovery.scan": [{ deviceKey: string; paths: string[] }, RecoveryScan];
+  "recovery.start": [Record<string, unknown>, Job];
+  "backups.list": [{ caseId?: number }, BackupRecord[]];
+  "backups.get": [{ id: number }, BackupRecord];
+  "backups.browse": [{ id: number; passphrase: string }, { backup: BackupRecord; files: BackupFile[]; warnings: string[] }];
+  "backups.verify": [{ id: number; passphrase: string }, Job];
+  "backups.export": [{ id: number; passphrase: string; categories?: DataCategory[]; paths?: string[] }, Job];
+  "backups.delete": [{ id: number; confirmation: string }, { deleted: number }];
+  "jobs.list": [Record<string, never>, Job[]];
+  "jobs.get": [{ id: number }, Job];
+  "jobs.cancel": [{ id: number }, Job];
   "evidence.verify": [Record<string, never>, { valid: boolean; checked: number; brokenAtId: number | null }];
 }
 
@@ -306,5 +339,6 @@ export interface MrLabBridge {
   onBackendStatus(cb: (s: BackendStatus) => void): () => void;
   openPath(path: string): Promise<string>;
   openAppleDevicesStore(): Promise<boolean>;
+  pickSource(kind: "folder" | "zip"): Promise<string | null>;
   appInfo(): Promise<{ version: string; platform: string; packaged: boolean }>;
 }

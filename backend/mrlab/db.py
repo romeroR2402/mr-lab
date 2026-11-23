@@ -139,6 +139,29 @@ MIGRATIONS: list[str] = [
     );
     CREATE INDEX idx_screen_serial ON screen_assessments(device_serial);
     """,
+    # v4: centro de recuperación de datos y administrador de respaldos
+    """
+    CREATE TABLE backups (
+        id               INTEGER PRIMARY KEY AUTOINCREMENT,
+        created_at       TEXT NOT NULL,
+        case_id          INTEGER NOT NULL REFERENCES cases(id),
+        source           TEXT NOT NULL,
+        device_serial    TEXT,
+        device_label     TEXT,
+        path             TEXT NOT NULL,
+        manifest_path    TEXT NOT NULL,
+        container_bytes  INTEGER NOT NULL,
+        plain_bytes      INTEGER NOT NULL,
+        file_count       INTEGER NOT NULL,
+        categories_json  TEXT NOT NULL,
+        container_sha256 TEXT NOT NULL,
+        warnings_json    TEXT,
+        verified_at      TEXT,
+        verify_result    TEXT,
+        status           TEXT NOT NULL DEFAULT 'ok'
+    );
+    CREATE INDEX idx_backups_case ON backups(case_id);
+    """,
 ]
 
 

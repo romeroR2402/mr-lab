@@ -17,10 +17,10 @@ def recovery_channels(dev: dict) -> list[dict]:
     ch = []
     if dev["platform"] == "android" and dev["commState"] == "online" and dev["authState"] == "authorized":
         ch.append({"id": "adb_pull", "label": "Copia de almacenamiento compartido vía ADB (interfaz autorizada)",
-                   "module": "data-recovery", "implemented": False})
+                   "module": "data-recovery", "implemented": True})
     if dev["platform"] == "apple" and dev["authState"] == "authorized":
         ch.append({"id": "apple_backup", "label": "Respaldo local oficial (idevicebackup2)",
-                   "module": "backup-manager", "implemented": False})
+                   "module": "data-recovery", "implemented": True})
     if dev["mode"] in ("recovery", "sideload"):
         ch.append({"id": "sideload", "label": "Actualización OTA oficial por sideload",
                    "module": "system-repair", "implemented": False})

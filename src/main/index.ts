@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell } from "electron";
+import { app, BrowserWindow, dialog, ipcMain, shell } from "electron";
 import { mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { BackendBridge } from "./backend";
@@ -63,6 +63,18 @@ ipcMain.handle("rpc", async (_e, method: unknown, params: unknown) => {
 });
 ipcMain.handle("backend:status", () => backend.status);
 ipcMain.handle("app:info", () => ({ version: app.getVersion(), platform: process.platform, packaged: app.isPackaged }));
+// Selector nativo de carpeta o .zip para importar datos.
+ipcMain.handle("dialog:pickSource", async (_e, kind: unknown) => {
+  if (!win) return null;
+  const folder = kind === "folder";
+  const r = await dialog.showOpenDialog(win, {
+    title: folder ? "Seleccionar carpeta a importar" : "Seleccionar archivo .zip a importar",
+    properties: folder ? ["openDirectory"] : ["openFile"],
+    filters: folder ? undefined : [{ name: "Archivo ZIP", extensions: ["zip"] }],
+  });
+  return r.canceled ? null : r.filePaths[0] ?? null;
+});
+
 // Única URL externa permitida: la ficha oficial de Apple Devices en Microsoft Store.
 ipcMain.handle("shell:openAppleStore", async () => {
   if (process.platform !== "win32") return false;

@@ -4,6 +4,8 @@ import { PageId, Sidebar } from "./components/Sidebar";
 import { ApiError, call } from "./lib/api";
 import { Ctx, LabContext } from "./lib/context";
 import AccessRecovery from "./pages/AccessRecovery";
+import BackupManager from "./pages/BackupManager";
+import DataRecovery from "./pages/DataRecovery";
 import CaseFiles from "./pages/CaseFiles";
 import Dashboard from "./pages/Dashboard";
 import Devices from "./pages/Devices";
@@ -88,10 +90,12 @@ export default function App() {
             {page === "devices" && <Devices />}
             {page === "diagnostics" && <Diagnostics />}
             {page === "screen-recovery" && <ScreenRecovery />}
+            {page === "data-recovery" && <DataRecovery />}
+            {page === "backup-manager" && <BackupManager />}
             {page === "access-recovery" && <AccessRecovery />}
             {page === "case-files" && <CaseFiles />}
             {page === "settings" && <SettingsPage />}
-            {["data-recovery", "backup-manager", "system-repair", "reset-center"].includes(page) && (
+            {["system-repair", "reset-center"].includes(page) && (
               <PlannedModule moduleId={page} />
             )}
           </div>
