@@ -88,7 +88,7 @@ class AppleConnector:
 
     def list_devices(self) -> tuple[list[Device], list[str]]:
         if not self.available:
-            return [], ["libimobiledevice no disponible: dispositivos Apple no se pueden enumerar."]
+            return [], ["Motor Apple no disponible: el componente integrado falta o no superó la verificación de integridad (Configuración → Componentes)."]
         errors: list[str] = []
         seen: dict[str, str] = {}
         for udid in self._udids("-l"):

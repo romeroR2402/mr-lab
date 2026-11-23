@@ -74,3 +74,28 @@ export function authTone(state: string): Tone {
 }
 
 export type Tone = "ok" | "warning" | "error" | "info" | "muted" | "accent";
+
+export const MODE_LABEL: Record<string, string> = {
+  normal: "normal",
+  recovery: "recovery",
+  sideload: "sideload",
+  bootloader: "bootloader",
+  fastbootd: "fastbootd",
+};
+
+export const MODULE_LABEL: Record<string, string> = {
+  "data-recovery": "Recuperación de datos",
+  "backup-manager": "Respaldos",
+  "system-repair": "Reparación de sistema",
+  "screen-recovery": "Pantalla dañada",
+  "reset-center": "Restauración de fábrica",
+};
+
+export const RESULT_LABEL: Record<string, string> = {
+  success: "Correcto",
+  failure: "Falla",
+  info: "Información",
+  warning: "Advertencia",
+  cancelled: "Cancelado",
+  confirmed: "Confirmado",
+};

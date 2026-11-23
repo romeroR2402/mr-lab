@@ -10,17 +10,17 @@ export type PageId =
   | "backup-manager" | "system-repair" | "reset-center" | "case-files" | "settings";
 
 export const NAV: { id: PageId; label: string; icon: typeof Activity; stage?: number }[] = [
-  { id: "overview", label: "Overview", icon: LayoutDashboard },
-  { id: "devices", label: "Devices", icon: Smartphone },
-  { id: "diagnostics", label: "Diagnostics", icon: Activity },
-  { id: "screen-recovery", label: "Screen Recovery", icon: MonitorSmartphone, stage: 2 },
-  { id: "data-recovery", label: "Data Recovery", icon: Archive, stage: 3 },
-  { id: "backup-manager", label: "Backup Manager", icon: DatabaseBackup, stage: 3 },
-  { id: "access-recovery", label: "Access Recovery", icon: KeyRound, stage: 4 },
-  { id: "system-repair", label: "System Repair", icon: Wrench, stage: 5 },
-  { id: "reset-center", label: "Reset Center", icon: RotateCcw, stage: 5 },
-  { id: "case-files", label: "Case Files", icon: FolderKanban },
-  { id: "settings", label: "Settings", icon: Settings },
+  { id: "overview", label: "Resumen", icon: LayoutDashboard },
+  { id: "devices", label: "Dispositivos", icon: Smartphone },
+  { id: "diagnostics", label: "Diagnóstico", icon: Activity },
+  { id: "screen-recovery", label: "Pantalla dañada", icon: MonitorSmartphone, stage: 2 },
+  { id: "data-recovery", label: "Recuperación de datos", icon: Archive, stage: 3 },
+  { id: "backup-manager", label: "Respaldos", icon: DatabaseBackup, stage: 3 },
+  { id: "access-recovery", label: "Recuperación de acceso", icon: KeyRound, stage: 4 },
+  { id: "system-repair", label: "Reparación de sistema", icon: Wrench, stage: 5 },
+  { id: "reset-center", label: "Restauración de fábrica", icon: RotateCcw, stage: 5 },
+  { id: "case-files", label: "Expedientes", icon: FolderKanban },
+  { id: "settings", label: "Configuración", icon: Settings },
 ];
 
 export function Sidebar({ page, onNavigate, backend, deviceCount }: {
@@ -28,14 +28,14 @@ export function Sidebar({ page, onNavigate, backend, deviceCount }: {
 }) {
   const tone = backend.state === "ready" ? "ok" : backend.state === "starting" ? "warning" : "error";
   return (
-    <aside className="flex w-60 shrink-0 flex-col border-r border-lab-line bg-lab-panel">
+    <aside className="flex w-64 shrink-0 flex-col border-r border-lab-line bg-lab-panel">
       <div className="flex items-center gap-3 border-b border-lab-line px-4 py-4">
         <div className="grid h-9 w-9 place-items-center rounded-md border border-cyan-500/40 bg-cyan-500/10">
           <Cpu className="h-5 w-5 text-cyan-300" />
         </div>
         <div>
           <div className="text-sm font-semibold tracking-wide text-white">MR LAB</div>
-          <div className="text-[10px] uppercase tracking-[0.2em] text-lab-mute">Mobile Recovery Lab</div>
+          <div className="text-[10px] uppercase tracking-[0.2em] text-lab-mute">Laboratorio de recuperación móvil</div>
         </div>
       </div>
       <nav className="flex-1 space-y-0.5 overflow-y-auto p-2">
@@ -50,7 +50,7 @@ export function Sidebar({ page, onNavigate, backend, deviceCount }: {
               {id === "devices" && deviceCount > 0 && (
                 <span className="rounded bg-cyan-500/20 px-1.5 text-[10px] font-semibold text-cyan-200">{deviceCount}</span>
               )}
-              {stage && <span className="text-[9px] uppercase tracking-wider text-lab-mute/60">E{stage}</span>}
+              {stage && <span className="text-[9px] uppercase tracking-wider text-lab-mute/60">Et. {stage}</span>}
             </button>
           );
         })}
@@ -58,7 +58,7 @@ export function Sidebar({ page, onNavigate, backend, deviceCount }: {
       <div className="border-t border-lab-line p-3 text-[11px] text-lab-mute">
         <div className="flex items-center gap-2">
           <Dot tone={tone} />
-          <span>Backend: {{ ready: "en línea", starting: "iniciando", crashed: "con error", stopped: "detenido" }[backend.state]}</span>
+          <span>Servicios: {{ ready: "en línea", starting: "iniciando", crashed: "con error", stopped: "detenido" }[backend.state]}</span>
         </div>
         <div className="mt-1 flex items-center gap-2"><ClipboardList className="h-3 w-3" /> Datos almacenados localmente</div>
       </div>

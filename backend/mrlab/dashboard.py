@@ -27,6 +27,8 @@ def summary() -> dict:
         "caseStats": cases.stats(),
         "evidenceCount": evidence.list_entries(limit=1)["total"],
         "tools": {x["id"]: x["installed"] for x in t["tools"]},
+        "toolSources": {x["id"]: x["source"] for x in t["tools"]},
+        "autonomy": t["autonomy"],
         "appleService": t["appleService"],
         "encryption": t["encryption"],
     }

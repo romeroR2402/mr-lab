@@ -1,0 +1,39 @@
+{
+  "_comment": "Componentes que MR Lab integra en su instalador. scripts/fetch_components.py los descarga, verifica y genera resources/tools/components.json. Fije 'sha256' para builds reproducibles; si está vacío se calcula y se guarda en components/lock.json en la primera descarga.",
+  "components": [
+    {
+      "id": "platform-tools",
+      "name": "Motor Android (adb / fastboot)",
+      "kind": "tool",
+      "url": "https://dl.google.com/android/repository/platform-tools-latest-windows.zip",
+      "sha256": "",
+      "stripPrefix": "platform-tools/",
+      "dest": "tools/platform-tools",
+      "required": ["adb.exe", "fastboot.exe", "AdbWinApi.dll", "AdbWinUsbApi.dll"],
+      "license": "Apache-2.0 (código AOSP); binarios oficiales sujetos a los términos de Android SDK"
+    },
+    {
+      "id": "android-usb-driver",
+      "name": "Controlador USB Android (WinUSB)",
+      "kind": "driver",
+      "url": "https://dl.google.com/android/repository/usb_driver_r13-windows.zip",
+      "sha256": "",
+      "stripPrefix": "usb_driver/",
+      "dest": "drivers/android-usb",
+      "required": ["android_winusb.inf"],
+      "license": "Términos de Android SDK"
+    },
+    {
+      "id": "libimobiledevice",
+      "name": "Motor Apple (libimobiledevice)",
+      "kind": "tool",
+      "url": "",
+      "sha256": "",
+      "stripPrefix": "",
+      "dest": "tools/libimobiledevice",
+      "required": ["idevice_id.exe", "ideviceinfo.exe", "idevicepair.exe", "idevicediagnostics.exe", "idevicebackup2.exe"],
+      "license": "LGPL-2.1",
+      "note": "Indique la URL de una compilación para Windows x64 que haya validado, o use --local libimobiledevice=RUTA."
+    }
+  ]
+}

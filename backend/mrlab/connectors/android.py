@@ -92,7 +92,7 @@ class AdbConnector:
     def list_devices(self) -> tuple[list[Device], list[str]]:
         errors: list[str] = []
         if not self.path:
-            return [], ["adb no disponible: instale Android SDK Platform Tools o configure su ruta en Settings."]
+            return [], ["Motor Android no disponible: el componente integrado falta o no superó la verificación de integridad (Configuración → Componentes)."]
         r = self._cmd("devices", "-l", timeout=20)
         if not r.ok:
             errors.append(f"adb devices falló: {r.error or r.stderr.strip() or r.code}")

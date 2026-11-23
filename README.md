@@ -13,17 +13,21 @@ y gestión de expedientes con registro de evidencias.
 
 | Módulo | Estado |
 |---|---|
-| Dashboard | ✅ Implementado |
-| Device Scanner (adb, fastboot, libimobiledevice) | ✅ Implementado |
-| Device Diagnostic (Android, bootloader, Apple) | ✅ Implementado |
-| Evidence Log (solo inserción + cadena SHA-256) | ✅ Implementado |
-| Case Management | 🟡 Parcial (falta adjuntar archivos exportados) |
-| Backup Manager | 🟡 Motor de cifrado AES-256-GCM listo; gestión pendiente |
-| Screen Recovery Assistant | ⏳ Etapa 2 |
-| Data Recovery Center | ⏳ Etapa 3 |
-| Access Recovery Assistant | ⏳ Etapa 4 |
-| System Repair / Factory Reset Assistant | ⏳ Etapa 5 |
-| Export and Reports | ⏳ Etapa 6 |
+| Resumen (panel principal) | ✅ Implementado |
+| Detección de dispositivos (motores Android y Apple) | ✅ Implementado |
+| Diagnóstico de dispositivos (Android, bootloader, Apple) | ✅ Implementado |
+| Registro de evidencias (solo inserción + cadena SHA-256) | ✅ Implementado |
+| Componentes integrados y modo autónomo | ✅ Implementado |
+| Gestión de expedientes | 🟡 Parcial (falta adjuntar archivos exportados) |
+| Administrador de respaldos | 🟡 Motor de cifrado AES-256-GCM listo; gestión pendiente |
+| Asistente de pantalla dañada | ⏳ Etapa 2 |
+| Centro de recuperación de datos | ⏳ Etapa 3 |
+| Asistente de recuperación de acceso | ⏳ Etapa 4 |
+| Reparación de sistema / Restauración de fábrica | ⏳ Etapa 5 |
+| Exportación y reportes | ⏳ Etapa 6 |
+
+**Plataforma autónoma:** el instalador incluye sus propios motores y controladores, verificados por
+SHA-256; el técnico solo instala MR Lab. Detalles y límites en [docs/AUTONOMIA.md](docs/AUTONOMIA.md).
 
 ## Inicio rápido (desarrollo)
 
@@ -37,4 +41,5 @@ Documentación:
 
 - [docs/INSTALL.md](docs/INSTALL.md) — instalación, requisitos y generación del instalador de Windows.
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — arquitectura, protocolo RPC, base de datos y seguridad.
+- [docs/AUTONOMIA.md](docs/AUTONOMIA.md) — componentes integrados y qué no puede eliminarse.
 - [docs/ROADMAP.md](docs/ROADMAP.md) — plan por etapas.

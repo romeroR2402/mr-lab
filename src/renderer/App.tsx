@@ -78,7 +78,7 @@ export default function App() {
         <main className="grid-bg flex-1 overflow-y-auto">
           {backend.state !== "ready" && (
             <div className={`border-b px-6 py-2 text-sm ${backend.state === "starting" ? "border-amber-500/30 bg-amber-500/5 text-amber-200" : "border-rose-500/30 bg-rose-500/10 text-rose-200"}`}>
-              {backend.state === "starting" ? "Iniciando servicios locales…" : `Backend no disponible. ${backend.detail ?? ""}`}
+              {backend.state === "starting" ? "Iniciando servicios locales…" : `Servicios locales no disponibles. ${backend.detail ?? ""}`}
             </div>
           )}
           <div className="mx-auto max-w-[1400px] p-6">

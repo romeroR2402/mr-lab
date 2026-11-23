@@ -37,11 +37,36 @@ export interface ToolInfo {
   version: string | null;
   purpose: string;
   requiredFor: string[];
+  source: "integrated" | "custom" | "system" | null;
+}
+
+export interface ComponentInfo {
+  id: string;
+  name: string;
+  kind: "tool" | "driver";
+  version: string | null;
+  license: string | null;
+  source: string | null;
+  dest: string | null;
+  fileCount: number;
+  status: "ok" | "altered" | "incomplete";
+  missing: string[];
+  altered: string[];
+}
+
+export interface ComponentsStatus {
+  inventory: boolean;
+  generatedAt?: string;
+  resourcesDir: string | null;
+  error?: string;
+  components: ComponentInfo[];
 }
 
 export interface ToolsReport {
   tools: ToolInfo[];
-  appleService: { name: string; installed: boolean; running: boolean; detail: string };
+  components: ComponentsStatus;
+  autonomy: { autonomousMode: boolean; allIntegrated: boolean; external: string[]; missing: string[] };
+  appleService: { name: string; installed: boolean; running: boolean; detail: string; storeUrl?: string };
   encryption: { available: boolean; version: string | null };
   platform: string;
 }
@@ -135,6 +160,7 @@ export interface Settings {
   libimobiledeviceDir: string;
   autoScanSeconds: number;
   maskIdentifiers: boolean;
+  autonomousMode: boolean;
 }
 
 export interface DashboardSummary {
@@ -149,6 +175,8 @@ export interface DashboardSummary {
   caseStats: { total: number; byStatus: Record<string, number> };
   evidenceCount: number;
   tools: Record<string, boolean>;
+  toolSources: Record<string, string | null>;
+  autonomy: ToolsReport["autonomy"];
   appleService: ToolsReport["appleService"];
   encryption: ToolsReport["encryption"];
 }
@@ -166,6 +194,7 @@ export interface RpcMethods {
   "system.health": [Record<string, never>, HealthInfo];
   "system.modules": [Record<string, never>, ModuleInfo[]];
   "tools.detect": [{ force?: boolean }, ToolsReport];
+  "components.status": [{ force?: boolean }, ComponentsStatus];
   "settings.get": [Record<string, never>, Settings];
   "settings.update": [{ values: Partial<Settings> }, Settings];
   "devices.scan": [Record<string, never>, ScanResult];
@@ -205,5 +234,6 @@ export interface MrLabBridge {
   backendStatus(): Promise<BackendStatus>;
   onBackendStatus(cb: (s: BackendStatus) => void): () => void;
   openPath(path: string): Promise<string>;
+  openAppleDevicesStore(): Promise<boolean>;
   appInfo(): Promise<{ version: string; platform: string; packaged: boolean }>;
 }

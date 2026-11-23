@@ -9,12 +9,16 @@ files:
   - package.json
   - "!**/*.map"
 extraResources:
-  # Backend Python congelado con PyInstaller (npm run build:backend)
+  # Servicios locales (backend Python congelado: no requiere Python instalado)
   - from: backend/dist/mrlab-backend
     to: backend
-  # Herramientas opcionales redistribuibles (platform-tools, libimobiledevice)
+  # Componentes integrados: motor Android, motor Apple e inventario SHA-256
   - from: resources/tools
     to: tools
+    filter: ["**/*", "!README.md"]
+  # Controladores USB que el instalador registra con pnputil
+  - from: resources/drivers
+    to: drivers
 asar: true
 win:
   target:
@@ -24,9 +28,14 @@ win:
   requestedExecutionLevel: asInvoker
 nsis:
   oneClick: false
-  perMachine: false
+  # Instalación para todo el equipo (requiere administrador) para poder registrar controladores USB.
+  perMachine: true
+  allowElevation: true
   allowToChangeInstallationDirectory: true
   createDesktopShortcut: true
   createStartMenuShortcut: true
   shortcutName: Mobile Recovery Lab
   deleteAppDataOnUninstall: false
+  include: build/installer.nsh
+  language: "3082"
+  installerLanguages: ["es_ES"]

@@ -14,8 +14,14 @@ const backend = new BackendBridge({
   appRoot,
   packaged: app.isPackaged,
   dataDir,
-  toolsDir: join(appRoot, app.isPackaged ? "tools" : join("resources", "tools")),
+  toolsDir: join(resourcesDir(), "tools"),
+  resourcesDir: resourcesDir(),
 });
+
+/** Carpeta con los componentes integrados (motores Android/Apple y controladores). */
+function resourcesDir(): string {
+  return app.isPackaged ? process.resourcesPath : join(appRoot, "resources");
+}
 
 let win: BrowserWindow | null = null;
 
@@ -57,6 +63,12 @@ ipcMain.handle("rpc", async (_e, method: unknown, params: unknown) => {
 });
 ipcMain.handle("backend:status", () => backend.status);
 ipcMain.handle("app:info", () => ({ version: app.getVersion(), platform: process.platform, packaged: app.isPackaged }));
+// Única URL externa permitida: la ficha oficial de Apple Devices en Microsoft Store.
+ipcMain.handle("shell:openAppleStore", async () => {
+  if (process.platform !== "win32") return false;
+  await shell.openExternal("ms-windows-store://pdp/?productid=9NP83LWLPZ9K");
+  return true;
+});
 ipcMain.handle("shell:openPath", (_e, p: unknown) => {
   // Solo se permiten rutas dentro del directorio de datos de la aplicación.
   if (typeof p !== "string" || !resolve(p).startsWith(resolve(dataDir))) return "Ruta no permitida";

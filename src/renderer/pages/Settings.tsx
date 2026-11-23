@@ -1,4 +1,5 @@
-import { RefreshCw, Save, Wrench } from "lucide-react";
+import { Save } from "lucide-react";
+import ComponentsPanel from "../components/ComponentsPanel";
 import { useEffect, useState } from "react";
 import type { Settings } from "../../shared/types";
 import { Badge, Button, Card, ErrorBox, KV, PageHeader, Spinner } from "../components/ui";
@@ -42,16 +43,25 @@ export default function SettingsPage() {
 
   return (
     <>
-      <PageHeader title="Settings" subtitle="Estación, rutas de herramientas y estado de los módulos." />
+      <PageHeader title="Configuración" subtitle="Estación, componentes integrados y estado de los módulos." />
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <Card title="Estación" actions={<Button variant="primary" onClick={save} disabled={!form}><Save className="h-4 w-4" /> {saved ? "Guardado" : "Guardar"}</Button>}>
           {form ? (
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {text("technicianName", "Técnico responsable")}
               {text("labName", "Nombre del laboratorio")}
-              {text("adbPath", "Ruta de adb (opcional)", "C:\\platform-tools\\adb.exe", true)}
-              {text("fastbootPath", "Ruta de fastboot (opcional)", "C:\\platform-tools\\fastboot.exe", true)}
-              <div className="md:col-span-2">{text("libimobiledeviceDir", "Carpeta de libimobiledevice (opcional)", "C:\\libimobiledevice", true)}</div>
+              <label className="flex items-start gap-2 rounded-md border border-lab-line bg-lab-bg p-3 text-sm md:col-span-2">
+                <input type="checkbox" className="mt-1 accent-cyan-400" checked={form.autonomousMode}
+                  onChange={(e) => setForm({ ...form, autonomousMode: e.target.checked })} />
+                <span>
+                  <span className="font-medium text-white">Modo autónomo</span>
+                  <span className="block text-xs text-lab-mute">Usar exclusivamente los componentes integrados y verificados de MR Lab; ignora herramientas instaladas en el sistema.</span>
+                </span>
+              </label>
+              <div className="label md:col-span-2 mt-2">Rutas personalizadas (avanzado, opcional)</div>
+              {text("adbPath", "Ruta de adb", "C:\\platform-tools\\adb.exe", true)}
+              {text("fastbootPath", "Ruta de fastboot", "C:\\platform-tools\\fastboot.exe", true)}
+              <div className="md:col-span-2">{text("libimobiledeviceDir", "Carpeta de libimobiledevice", "C:\\libimobiledevice", true)}</div>
               <div>
                 <label className="label">Escaneo automático (s)</label>
                 <input type="number" min={2} max={300} className="input" value={form.autoScanSeconds}
@@ -67,32 +77,7 @@ export default function SettingsPage() {
           ) : <Spinner />}
         </Card>
 
-        <Card title="Herramientas detectadas" icon={<Wrench className="h-3.5 w-3.5" />}
-          actions={<Button onClick={tools.reload} disabled={tools.loading}>{tools.loading ? <Spinner /> : <RefreshCw className="h-4 w-4" />} Detectar</Button>}>
-          <ErrorBox error={tools.error} onRetry={tools.reload} />
-          {tools.data && (
-            <div className="space-y-3">
-              {tools.data.tools.map((t) => (
-                <div key={t.id} className="flex items-start justify-between gap-3 border-b border-lab-line pb-2 last:border-0">
-                  <div className="min-w-0">
-                    <div className="text-sm text-white">{t.name}</div>
-                    <div className="text-xs text-lab-mute">{t.purpose}</div>
-                    {t.path && <div className="truncate font-mono text-[11px] text-cyan-200/70">{t.path}</div>}
-                  </div>
-                  <Badge tone={t.installed ? "ok" : "error"}>{t.installed ? (t.version ? `v${t.version}` : "Instalado") : "No encontrado"}</Badge>
-                </div>
-              ))}
-              <div className="flex items-center justify-between text-sm">
-                <span>{tools.data.appleService.name}</span>
-                <Badge tone={tools.data.appleService.running ? "ok" : "warning"}>{tools.data.appleService.detail}</Badge>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span>Biblioteca de cifrado</span>
-                <Badge tone={tools.data.encryption.available ? "ok" : "error"}>{tools.data.encryption.available ? `cryptography ${tools.data.encryption.version}` : "No instalada"}</Badge>
-              </div>
-            </div>
-          )}
-        </Card>
+        <ComponentsPanel data={tools.data} error={tools.error} loading={tools.loading} onRefresh={tools.reload} />
 
         <Card title="Estado de módulos">
           <ul className="space-y-2">
@@ -110,7 +95,7 @@ export default function SettingsPage() {
 
         <Card title="Sistema">
           {health.data ? <KV items={[
-            ["Versión backend", health.data.version], ["Python", health.data.python], ["Esquema BD", String(health.data.schemaVersion)],
+            ["Versión de servicios", health.data.version], ["Python", health.data.python], ["Esquema BD", String(health.data.schemaVersion)],
             ["Datos locales", health.data.dataDir], ["Base de datos", health.data.db],
           ]} /> : <ErrorBox error={health.error} />}
         </Card>

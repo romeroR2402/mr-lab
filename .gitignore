@@ -8,3 +8,5 @@ __pycache__/
 .venv/
 resources/tools/*
 !resources/tools/README.md
+resources/drivers/*
+!resources/drivers/README.md

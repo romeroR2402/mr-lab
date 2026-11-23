@@ -52,14 +52,14 @@ export default function Devices() {
   const { scan, scanError, scanning, rescan, selectedKey, setSelectedKey, navigate, settings } = useLab();
   return (
     <>
-      <PageHeader title="Device Scanner"
+      <PageHeader title="Detección de dispositivos"
         subtitle={`Detección automática cada ${settings?.autoScanSeconds ?? 5} s · Último escaneo: ${fmtDate(scan?.scannedAt)}`}
         actions={<Button onClick={rescan} disabled={scanning}>{scanning ? <Spinner /> : <RefreshCw className="h-4 w-4" />} Escanear ahora</Button>} />
       <ErrorBox error={scanError} onRetry={rescan} />
       {scan && scan.errors.length > 0 && (
         <div className="mb-4 space-y-1 rounded-md border border-amber-500/30 bg-amber-500/5 p-3 text-sm text-amber-200">
           {scan.errors.map((e) => <div key={e}>• {e}</div>)}
-          <div className="pt-1 text-xs text-amber-200/70">Configure rutas en <button className="underline" onClick={() => navigate("settings")}>Settings</button>.</div>
+          <div className="pt-1 text-xs text-amber-200/70">Revise los componentes en <button className="underline" onClick={() => navigate("settings")}>Configuración</button>.</div>
         </div>
       )}
       {scan && (

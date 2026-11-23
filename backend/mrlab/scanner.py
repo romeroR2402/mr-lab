@@ -1,4 +1,4 @@
-"""Device Scanner: agrega todos los conectores y registra hallazgos."""
+"""Detección de dispositivos: agrega todos los conectores y registra hallazgos."""
 from __future__ import annotations
 
 import threading

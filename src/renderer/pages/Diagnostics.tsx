@@ -6,7 +6,7 @@ import { ApiError, call } from "../lib/api";
 import { useLab } from "../lib/context";
 import { fmtDate, maskId } from "../lib/format";
 import { useRpc } from "../lib/hooks";
-import { AUTH_LABEL, COMM_LABEL } from "../lib/labels";
+import { AUTH_LABEL, COMM_LABEL, MODULE_LABEL } from "../lib/labels";
 
 function ReportView({ report, mask }: { report: DiagnosticReport; mask: boolean }) {
   const groups = report.checks.reduce<Record<string, typeof report.checks>>((acc, c) => {
@@ -21,7 +21,7 @@ function ReportView({ report, mask }: { report: DiagnosticReport; mask: boolean 
           <div className="font-semibold text-white">{report.device.label}</div>
           <div className="text-xs text-lab-mute">
             Reporte #{report.id} · {fmtDate(report.timestamp)} · {maskId(report.device.serial, mask)}
-            {report.caseId ? ` · Expediente ${report.caseId}` : ""}
+            {report.caseId ? ` · Expediente #${report.caseId}` : ""}
           </div>
         </div>
         <StatusBadge status={report.summaryStatus} />
@@ -55,7 +55,7 @@ function ReportView({ report, mask }: { report: DiagnosticReport; mask: boolean 
             {report.recoveryChannels.map((ch) => (
               <li key={ch.id} className="flex items-center justify-between">
                 <span>{ch.label}</span>
-                <Badge tone={ch.implemented ? "ok" : "muted"}>{ch.implemented ? "Disponible" : `Pendiente (${ch.module})`}</Badge>
+                <Badge tone={ch.implemented ? "ok" : "muted"}>{ch.implemented ? "Disponible" : `Pendiente: ${MODULE_LABEL[ch.module] ?? ch.module}`}</Badge>
               </li>
             ))}
           </ul>
@@ -101,7 +101,7 @@ export default function Diagnostics() {
 
   return (
     <>
-      <PageHeader title="Device Diagnostic" subtitle="Diagnóstico de solo lectura mediante interfaces oficiales (adb, fastboot, lockdownd)." />
+      <PageHeader title="Diagnóstico de dispositivos" subtitle="Diagnóstico de solo lectura mediante interfaces oficiales (adb, fastboot, lockdownd)." />
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[340px_1fr]">
         <div className="space-y-4">
           <Card title="Objetivo" icon={<Activity className="h-3.5 w-3.5" />}>
@@ -155,7 +155,7 @@ export default function Diagnostics() {
           {running && !report && <Card><div className="flex items-center gap-3 text-sm"><Spinner /> Consultando al dispositivo…</div></Card>}
           {report ? <ReportView report={report} mask={mask} /> : !running && (
             <Card><Empty icon={<Activity className="h-8 w-8" />} title="Sin reporte seleccionado">
-              Ejecute un diagnóstico o abra uno del historial. Cada ejecución queda registrada en el Evidence Log.
+              Ejecute un diagnóstico o abra uno del historial. Cada ejecución queda en el Registro de evidencias.
             </Empty></Card>
           )}
         </div>

@@ -10,6 +10,7 @@ const bridge: MrLabBridge = {
     return () => ipcRenderer.removeListener("backend:status", listener);
   },
   openPath: (p) => ipcRenderer.invoke("shell:openPath", p),
+  openAppleDevicesStore: () => ipcRenderer.invoke("shell:openAppleStore"),
   appInfo: () => ipcRenderer.invoke("app:info"),
 };
 

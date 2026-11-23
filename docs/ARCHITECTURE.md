@@ -33,7 +33,8 @@ backend/
     cases.py         Expedientes
     evidence.py      Registro de evidencias encadenado
     crypto.py        Cifrado de respaldos
-    tools.py         Detección de herramientas instaladas
+    tools.py         Resolución de herramientas (personalizada → integrada → sistema)
+    components.py    Verificación SHA-256 de los componentes integrados
     modules.py       Estado de implementación de cada módulo
   tests/             Pruebas unitarias y de integración (adb falso solo para pruebas)
 ```
@@ -48,7 +49,8 @@ rechaza llamadas pendientes si el backend termina y lo reinicia automáticamente
 | Método | Descripción |
 |---|---|
 | `system.health`, `system.modules` | Versión, rutas, esquema; estado de los módulos |
-| `tools.detect` | Herramientas instaladas (cache 30 s; `force: true` para refrescar) |
+| `tools.detect` | Herramientas, origen y autonomía (cache 30 s; `force: true` para refrescar) |
+| `components.status` | Integridad de los componentes integrados |
 | `settings.get`, `settings.update` | Ajustes (lista blanca de claves) |
 | `devices.scan`, `devices.last`, `devices.known` | Escaneo de dispositivos |
 | `diagnostics.run`, `.history`, `.get` | Diagnóstico y reportes |

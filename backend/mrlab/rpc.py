@@ -10,7 +10,7 @@ import traceback
 from concurrent.futures import ThreadPoolExecutor
 from typing import Callable
 
-from . import cases, config, dashboard, db, evidence, modules, scanner, settings, tools
+from . import cases, components, config, dashboard, db, evidence, modules, scanner, settings, tools
 from .diagnostics import engine
 from .errors import NotImplementedOperation, RpcError
 
@@ -47,6 +47,7 @@ METHODS: dict[str, Callable[[dict], object]] = {
     "system.health": _health,
     "system.modules": lambda p: modules.list_modules(),
     "tools.detect": lambda p: tools.detect(force=bool(p.get("force"))),
+    "components.status": lambda p: components.status(force=bool(p.get("force"))),
     "settings.get": lambda p: settings.get_all(),
     "settings.update": lambda p: _update_settings(p),
     "devices.scan": lambda p: scanner.scan(),

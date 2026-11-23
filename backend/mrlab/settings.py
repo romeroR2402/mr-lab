@@ -16,6 +16,8 @@ DEFAULTS: dict = {
     "libimobiledeviceDir": "",
     "autoScanSeconds": 5,
     "maskIdentifiers": False,
+    # Modo autónomo: usar exclusivamente los componentes integrados en MR Lab.
+    "autonomousMode": False,
 }
 
 _FORBIDDEN = re.compile(r"(pass|pwd|pin|passcode|patron|pattern|secret|clave|codigo)", re.I)

@@ -1,10 +1,11 @@
 import { Activity, Archive, FolderKanban, KeyRound, MonitorSmartphone, Plug, RefreshCw, ShieldCheck, Smartphone, Wrench } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
+import { SOURCE_LABEL } from "../components/ComponentsPanel";
 import { Badge, Button, Card, Dot, Empty, ErrorBox, KV, PageHeader, Spinner, StatusBadge, StatusIcon } from "../components/ui";
 import { useLab } from "../lib/context";
 import { fmtDate, maskId } from "../lib/format";
 import { useRpc } from "../lib/hooks";
-import { AUTH_LABEL, CASE_STATUS, COMM_LABEL, CONN_LABEL, authTone, commTone } from "../lib/labels";
+import { AUTH_LABEL, CASE_STATUS, COMM_LABEL, CONN_LABEL, MODE_LABEL, MODULE_LABEL, STATUS_LABEL, authTone, commTone } from "../lib/labels";
 
 function Tile({ label, icon, children, footer }: { label: string; icon: ReactNode; children: ReactNode; footer?: ReactNode }) {
   return (
@@ -40,7 +41,7 @@ export default function Dashboard() {
   return (
     <>
       <PageHeader
-        title="Overview"
+        title="Resumen"
         subtitle={`Estación ${settings?.labName || "MR Lab"} · Técnico: ${settings?.technicianName || "sin asignar"}`}
         actions={<Button onClick={refresh} disabled={scanning}>{scanning ? <Spinner /> : <RefreshCw className="h-4 w-4" />} Escanear</Button>}
       />
@@ -62,7 +63,7 @@ export default function Dashboard() {
           {dev ? (
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2"><Dot tone={commTone(dev.commState)} /> {COMM_LABEL[dev.commState] ?? dev.commState}</div>
-              <div className="text-lab-mute">Vía {CONN_LABEL[dev.connection] ?? dev.connection} · modo {dev.mode}</div>
+              <div className="text-lab-mute">Vía {CONN_LABEL[dev.connection] ?? dev.connection} · modo {MODE_LABEL[dev.mode] ?? dev.mode}</div>
             </div>
           ) : <div className="text-sm text-lab-mute">—</div>}
         </Tile>
@@ -74,7 +75,7 @@ export default function Dashboard() {
               <div className="flex items-center gap-2"><StatusIcon status={diag.summaryStatus} className="h-6 w-6" /><StatusBadge status={diag.summaryStatus} /></div>
               <div className="text-right text-xs text-lab-mute">
                 {(["ok", "warning", "error", "unavailable"] as const).map((st) => (
-                  <div key={st}>{st}: {diag.checks.filter((c) => c.status === st).length}</div>
+                  <div key={st}>{STATUS_LABEL[st]}: {diag.checks.filter((c) => c.status === st).length}</div>
                 ))}
               </div>
             </div>
@@ -87,7 +88,7 @@ export default function Dashboard() {
         </Tile>
 
         <Tile label="Tipo de pantalla" icon={<MonitorSmartphone className="h-3.5 w-3.5" />}
-          footer="Clasificación de daño: Screen Recovery (Etapa 2)">
+          footer="Clasificación de daño: módulo Pantalla dañada (Etapa 2)">
           {display && display.status !== "unavailable" ? (
             <KV items={[
               ["Resolución", display.value],
@@ -115,7 +116,7 @@ export default function Dashboard() {
                 {(diag?.recoveryChannels ?? s.recoveryChannels).map((c) => (
                   <li key={c.id} className="flex items-start justify-between gap-2">
                     <span>{c.label}</span>
-                    <Badge tone={c.implemented ? "ok" : "muted"}>{c.implemented ? "Disponible" : "Módulo pendiente"}</Badge>
+                    <Badge tone={c.implemented ? "ok" : "muted"}>{c.implemented ? "Disponible" : `Pendiente: ${MODULE_LABEL[c.module] ?? c.module}`}</Badge>
                   </li>
                 ))}
               </ul>
@@ -145,22 +146,28 @@ export default function Dashboard() {
               </tbody>
             </table>
           ) : summary.loading && !s ? <Spinner /> : (
-            <Empty icon={<FolderKanban className="h-6 w-6" />} title="Sin expedientes">Abra un expediente en Case Files antes de operar un dispositivo.</Empty>
+            <Empty icon={<FolderKanban className="h-6 w-6" />} title="Sin expedientes">Abra un expediente en Expedientes antes de operar un dispositivo.</Empty>
           )}
         </Card>
 
         <Card title="Estación" icon={<Wrench className="h-3.5 w-3.5" />}
-          actions={<Button variant="ghost" onClick={() => navigate("settings")}>Herramientas</Button>}>
+          actions={<Button variant="ghost" onClick={() => navigate("settings")}>Componentes</Button>}>
           {s ? (
             <div className="space-y-2 text-sm">
-              {[["adb", "ADB"], ["fastboot", "fastboot"], ["ideviceinfo", "libimobiledevice"]].map(([id, name]) => (
+              <div className="flex items-center justify-between">
+                <span>Autonomía</span>
+                <Badge tone={s.autonomy.allIntegrated ? "ok" : "warning"}>{s.autonomy.allIntegrated ? "Motores propios" : "Depende de externos"}</Badge>
+              </div>
+              {[["adb", "Motor Android"], ["fastboot", "Bootloader Android"], ["ideviceinfo", "Motor Apple"]].map(([id, name]) => (
                 <div key={id} className="flex items-center justify-between">
                   <span>{name}</span>
-                  <Badge tone={s.tools[id] ? "ok" : "error"}>{s.tools[id] ? "Instalado" : "No encontrado"}</Badge>
+                  <Badge tone={!s.tools[id] ? "error" : s.toolSources[id] === "integrated" ? "ok" : "warning"}>
+                    {!s.tools[id] ? "No disponible" : SOURCE_LABEL[s.toolSources[id] ?? ""] ?? "Disponible"}
+                  </Badge>
                 </div>
               ))}
               <div className="flex items-center justify-between">
-                <span>{s.appleService.name}</span>
+                <span>Servicio USB de Apple</span>
                 <Badge tone={s.appleService.running ? "ok" : "warning"}>{s.appleService.running ? "Activo" : "Inactivo"}</Badge>
               </div>
               <div className="flex items-center justify-between">

@@ -16,6 +16,7 @@ export interface BackendOptions {
   packaged: boolean;
   dataDir: string;
   toolsDir: string;
+  resourcesDir: string;
 }
 
 const TIMEOUTS: Record<string, number> = {
@@ -67,6 +68,7 @@ export class BackendBridge extends EventEmitter {
           ...process.env,
           MRLAB_DATA_DIR: this.opts.dataDir,
           MRLAB_TOOLS_DIR: this.opts.toolsDir,
+          MRLAB_RESOURCES_DIR: this.opts.resourcesDir,
           PYTHONIOENCODING: "utf-8",
           PYTHONUTF8: "1",
         },

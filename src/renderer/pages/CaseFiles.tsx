@@ -6,7 +6,7 @@ import { ApiError, call } from "../lib/api";
 import { useLab } from "../lib/context";
 import { fmtDate } from "../lib/format";
 import { useRpc } from "../lib/hooks";
-import { AUTH_TYPES, CASE_STATUS, DEVICE_TYPES } from "../lib/labels";
+import { AUTH_TYPES, CASE_STATUS, DEVICE_TYPES, RESULT_LABEL, STATUS_LABEL } from "../lib/labels";
 
 const RESULT_TONE: Record<string, "ok" | "error" | "warning" | "info" | "accent" | "muted"> = {
   success: "ok", failure: "error", warning: "warning", info: "info", confirmed: "accent", cancelled: "muted",
@@ -117,12 +117,12 @@ function CaseDetail({ id, onChanged }: { id: number; onChanged: () => void }) {
         {d.operations?.length ? (
           <ul className="space-y-1 text-sm">{d.operations.map((o) => (
             <li key={o.id} className="flex justify-between gap-2"><span>{o.operation} {o.method && <span className="text-lab-mute">({o.method})</span>} · {o.details}</span>
-              <span className="text-lab-mute">{o.result} · {fmtDate(o.timestamp)}</span></li>
+              <span className="text-lab-mute">{STATUS_LABEL[o.result as keyof typeof STATUS_LABEL] ?? RESULT_LABEL[o.result] ?? o.result} · {fmtDate(o.timestamp)}</span></li>
           ))}</ul>
         ) : <div className="text-sm text-lab-mute">Sin operaciones registradas.</div>}
       </Card>
       <Card title="Archivos exportados">
-        <div className="text-sm text-lab-mute">{d.files?.length ? d.files.map((f) => f.path).join(", ") : "Sin archivos. La exportación se habilita en Data Recovery / Reports (Etapas 3 y 6)."}</div>
+        <div className="text-sm text-lab-mute">{d.files?.length ? d.files.map((f) => f.path).join(", ") : "Sin archivos. La exportación se habilita con Recuperación de datos y Reportes (Etapas 3 y 6)."}</div>
       </Card>
       <Card title="Evidencias del expediente">
         <EvidenceTable entries={ev.data?.entries ?? []} />
@@ -148,7 +148,7 @@ function EvidenceTable({ entries }: { entries: { id: number; timestamp: string; 
               <td className="py-2 pr-3">{e.technician}</td>
               <td className="py-2 pr-3">{e.deviceLabel ?? e.deviceSerial ?? "—"}</td>
               <td className="py-2 pr-3">{e.operation}</td>
-              <td className="py-2 pr-3"><Badge tone={RESULT_TONE[e.result] ?? "muted"}>{e.result}</Badge></td>
+              <td className="py-2 pr-3"><Badge tone={RESULT_TONE[e.result] ?? "muted"}>{RESULT_LABEL[e.result] ?? e.result}</Badge></td>
               <td className="max-w-[320px] py-2 pr-3 text-xs text-lab-mute">
                 {e.details}{e.confirmation && <div className="text-cyan-200/80">{e.confirmation}</div>}{e.error && <div className="text-rose-300">{e.error}</div>}
               </td>
@@ -172,10 +172,10 @@ export default function CaseFiles() {
 
   return (
     <>
-      <PageHeader title="Case Files" subtitle="Expedientes de servicio y registro de evidencias."
+      <PageHeader title="Expedientes" subtitle="Expedientes de servicio y registro de evidencias."
         actions={<>
           <Button variant={tab === "cases" ? "primary" : "default"} onClick={() => setTab("cases")}><FolderKanban className="h-4 w-4" /> Expedientes</Button>
-          <Button variant={tab === "evidence" ? "primary" : "default"} onClick={() => setTab("evidence")}><ScrollText className="h-4 w-4" /> Evidence Log</Button>
+          <Button variant={tab === "evidence" ? "primary" : "default"} onClick={() => setTab("evidence")}><ScrollText className="h-4 w-4" /> Registro de evidencias</Button>
         </>} />
       {tab === "cases" ? (
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-[380px_1fr]">
@@ -204,7 +204,7 @@ export default function CaseFiles() {
           </div>
         </div>
       ) : (
-        <Card title={`Evidence Log · ${ev.data?.total ?? 0} registros`} icon={<ScrollText className="h-3.5 w-3.5" />}
+        <Card title={`Registro de evidencias · ${ev.data?.total ?? 0} registros`} icon={<ScrollText className="h-3.5 w-3.5" />}
           actions={<>
             {verify && <Badge tone={verify.valid ? "ok" : "error"}>{verify.valid ? `Cadena íntegra (${verify.checked})` : `Alteración detectada en #${verify.brokenAtId}`}</Badge>}
             <Button onClick={async () => setVerify(await call("evidence.verify"))}><ShieldCheck className="h-4 w-4" /> Verificar integridad</Button>
