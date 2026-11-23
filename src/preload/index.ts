@@ -11,6 +11,7 @@ const bridge: MrLabBridge = {
   },
   openPath: (p) => ipcRenderer.invoke("shell:openPath", p),
   openAppleDevicesStore: () => ipcRenderer.invoke("shell:openAppleStore"),
+  openDriverPage: (url) => ipcRenderer.invoke("shell:openDriverPage", url),
   pickSource: (kind) => ipcRenderer.invoke("dialog:pickSource", kind),
   reportToPdf: (htmlPath) => ipcRenderer.invoke("report:toPdf", htmlPath),
   appInfo: () => ipcRenderer.invoke("app:info"),

@@ -107,6 +107,7 @@ Respaldar esta carpeta conserva todo el historial. MR Lab no envía datos a serv
 
 | Síntoma | Causa probable / acción |
 |---|---|
+| Samsung (u otra marca) conectado y «No hay dispositivos» | Falta el controlador USB del fabricante en Windows. MR Lab lo detecta y muestra un aviso con el enlace oficial (Samsung: developer.samsung.com/android-usb-driver). Instálelo y reconecte el cable. |
 | "Motor Android no disponible" | El componente integrado falta o fue alterado: reinstale MR Lab. |
 | Dispositivo "Sin autorizar" | Acepte el diálogo de depuración USB; revoque autorizaciones y reconecte si no aparece. |
 | Dispositivo "Sin permisos USB" | Falta el controlador USB del fabricante (Windows) o reglas udev (Linux). |

@@ -7,6 +7,7 @@ from . import db, evidence
 from .connectors.android import AdbConnector, FastbootConnector
 from .connectors.apple import AppleConnector
 from .connectors.base import Device
+from .connectors import usb_windows
 from .util.timeutil import now_iso
 
 _lock = threading.Lock()
@@ -62,7 +63,20 @@ def scan() -> dict:
             old = _cache.pop(gone, None)
             evidence.log("Dispositivo desconectado", "info",
                          device_serial=old.serial if old else gone, device_label=old.label if old else None)
+        # Si Windows ve teléfonos que adb no ve, explicar por qué (controlador, cable, depuración).
+        usb_hints: list[dict] = []
+        try:
+            android_seen = sum(1 for d in devices if d.platform == "android")
+            apple_seen = sum(1 for d in devices if d.platform == "apple")
+            for h in usb_windows.scan():
+                if h["vendor"] == "Apple" and apple_seen == 0:
+                    usb_hints.append(h)
+                elif h["vendor"] != "Apple" and android_seen == 0:
+                    usb_hints.append(h)
+        except Exception as e:  # el diagnóstico nunca debe romper el escaneo
+            errors.append(f"No se pudo consultar los dispositivos USB de Windows: {e}")
         _last.update({
+            "usbHints": usb_hints,
             "devices": [d.to_api() for d in devices],
             "errors": errors,
             "scannedAt": now_iso(),

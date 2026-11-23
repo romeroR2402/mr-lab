@@ -22,7 +22,15 @@ export interface DeviceInfo {
   notes: string[];
 }
 
+export interface UsbHint {
+  vendor: string; vid: string; driverUrl: string | null;
+  diagnosis: "missing_driver" | "no_adb_interface" | "adb_ready" | "apple" | "unknown";
+  message: string; adb: string | null; adbOk: boolean; missingDriver: boolean; mtp: boolean;
+  interfaces: { name: string | null; class: string | null; errorCode: number | null }[];
+}
+
 export interface ScanResult {
+  usbHints?: UsbHint[];
   devices: DeviceInfo[];
   errors: string[];
   scannedAt: string | null;
@@ -370,6 +378,7 @@ export interface MrLabBridge {
   onBackendStatus(cb: (s: BackendStatus) => void): () => void;
   openPath(path: string): Promise<string>;
   openAppleDevicesStore(): Promise<boolean>;
+  openDriverPage(url: string): Promise<boolean>;
   pickSource(kind: "folder" | "zip"): Promise<string | null>;
   reportToPdf(htmlPath: string): Promise<string>;
   appInfo(): Promise<{ version: string; platform: string; packaged: boolean }>;

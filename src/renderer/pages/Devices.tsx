@@ -3,6 +3,7 @@ import type { DeviceInfo } from "../../shared/types";
 import { Badge, Button, Card, Dot, Empty, ErrorBox, KV, PageHeader, Spinner } from "../components/ui";
 import { useLab } from "../lib/context";
 import { fmtDate, maskId } from "../lib/format";
+import { bridge } from "../lib/api";
 import { AUTH_LABEL, COMM_LABEL, CONN_LABEL, authTone, commTone } from "../lib/labels";
 
 function DeviceCard({ d, selected, onSelect, onDiagnose, mask }: {
@@ -62,6 +63,27 @@ export default function Devices() {
           <div className="pt-1 text-xs text-amber-200/70">Revise los componentes en <button className="underline" onClick={() => navigate("settings")}>Configuración</button>.</div>
         </div>
       )}
+      {scan?.usbHints?.map((h) => (
+        <div key={h.vid} className={`mb-4 rounded-lg border p-4 ${h.diagnosis === "missing_driver" ? "border-rose-500/40 bg-rose-500/5" : "border-amber-500/40 bg-amber-500/5"}`}>
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="flex items-start gap-3">
+              <TriangleAlert className={`mt-0.5 h-5 w-5 shrink-0 ${h.diagnosis === "missing_driver" ? "text-rose-300" : "text-amber-300"}`} />
+              <div>
+                <div className="font-medium text-white">Windows detecta un teléfono {h.vendor} que MR Lab no puede usar todavía</div>
+                <div className="mt-1 text-sm text-lab-text">{h.message}</div>
+                <ul className="mt-2 space-y-0.5 text-xs text-lab-mute">
+                  {h.interfaces.map((i, n) => (
+                    <li key={n}>• {i.name ?? "Interfaz"}{i.errorCode ? ` — sin controlador (código ${i.errorCode})` : " — correcto"}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            {h.driverUrl && h.diagnosis === "missing_driver" && (
+              <Button variant="primary" onClick={() => bridge().openDriverPage(h.driverUrl!)}>Descargar controlador oficial de {h.vendor}</Button>
+            )}
+          </div>
+        </div>
+      ))}
       {scan && (
         <div className="mb-4 flex flex-wrap gap-2 text-xs">
           {Object.entries(scan.connectors).map(([name, c]) => (
@@ -73,9 +95,18 @@ export default function Devices() {
       {scan && scan.devices.length === 0 && (
         <Card>
           <Empty icon={<Usb className="h-8 w-8" />} title="No hay dispositivos conectados">
-            Android: active "Depuración USB" en Opciones de desarrollador y acepte la huella RSA.
-            Apple: desbloquee el dispositivo y pulse "Confiar en este equipo". El escaneo continúa automáticamente.
+            Android: active «Depuración USB» en Opciones de desarrollador y acepte «¿Permitir depuración USB?» en el teléfono.
+            Apple: desbloquee el dispositivo y pulse «Confiar en este equipo». El escaneo continúa automáticamente.
           </Empty>
+          <div className="mx-auto mt-2 max-w-xl text-left text-xs text-lab-mute">
+            <div className="label">Si conectó un teléfono y no aparece</div>
+            <ol className="list-inside list-decimal space-y-0.5">
+              <li>Use un cable de datos (muchos cables solo cargan) y un puerto USB directo del PC, sin hub.</li>
+              <li>Samsung, Xiaomi, Motorola y otras marcas necesitan su controlador USB oficial en Windows.</li>
+              <li>En el teléfono: Opciones de desarrollador → «Revocar autorizaciones de depuración USB», desconecte y vuelva a conectar.</li>
+              <li>Acepte el aviso del teléfono y marque «Permitir siempre desde este equipo».</li>
+            </ol>
+          </div>
         </Card>
       )}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 2xl:grid-cols-3">

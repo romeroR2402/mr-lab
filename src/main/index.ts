@@ -105,6 +105,17 @@ ipcMain.handle("report:toPdf", async (_e, htmlPath: unknown) => {
   }
 });
 
+// Páginas oficiales de controladores USB (lista cerrada).
+const DRIVER_PAGES = new Set([
+  "https://developer.samsung.com/android-usb-driver",
+  "https://developer.android.com/studio/run/oem-usb",
+]);
+ipcMain.handle("shell:openDriverPage", async (_e, url: unknown) => {
+  if (typeof url !== "string" || !DRIVER_PAGES.has(url)) return false;
+  await shell.openExternal(url);
+  return true;
+});
+
 // Única URL externa permitida: la ficha oficial de Apple Devices en Microsoft Store.
 ipcMain.handle("shell:openAppleStore", async () => {
   if (process.platform !== "win32") return false;
