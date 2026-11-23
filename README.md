@@ -46,3 +46,5 @@ Documentación:
 - [docs/PANTALLA.md](docs/PANTALLA.md) — asistente de pantalla dañada.
 - [docs/ACCESO.md](docs/ACCESO.md) — módulo de análisis de acceso y guía de plugins.
 - [docs/ROADMAP.md](docs/ROADMAP.md) — plan por etapas.
+
+**Página del proyecto:** https://romeror2402.github.io/mr-lab/
