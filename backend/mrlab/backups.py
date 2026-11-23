@@ -89,10 +89,10 @@ def verify(backup_id: int, passphrase: str) -> dict:
         return {"backupId": backup_id, "result": result}
 
     def on_error(job: jobs.Job, message: str) -> None:
-        if job.status == "failed":
+        if job.final == "failed":
             with db.write() as conn:
                 conn.execute("UPDATE backups SET verified_at = ?, verify_result = ? WHERE id = ?", (now_iso(), "failed", backup_id))
-        evidence.log("Verificación de respaldo", "failure" if job.status == "failed" else "cancelled",
+        evidence.log("Verificación de respaldo", "failure" if job.final == "failed" else "cancelled",
                      case_id=b["caseId"], device_serial=b["deviceSerial"], error=message, details={"respaldo": backup_id})
 
     return jobs.start("verify", f"Verificación · respaldo #{backup_id}", run, on_error)
@@ -166,7 +166,7 @@ def export(backup_id: int, passphrase: str, cats: list[str] | None, paths: list[
             shutil.rmtree(stage, ignore_errors=True)
 
     def on_error(job: jobs.Job, message: str) -> None:
-        evidence.log("Exportación de datos", "cancelled" if job.status == "cancelled" else "failure",
+        evidence.log("Exportación de datos", "cancelled" if job.final == "cancelled" else "failure",
                      case_id=b["caseId"], device_serial=b["deviceSerial"], error=message, details={"respaldo": backup_id})
 
     return jobs.start("export", f"Exportación · respaldo #{backup_id}", run, on_error)

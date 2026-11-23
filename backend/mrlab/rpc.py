@@ -10,7 +10,7 @@ import traceback
 from concurrent.futures import ThreadPoolExecutor
 from typing import Callable
 
-from . import backups, cases, components, config, jobs, dashboard, db, evidence, modules, scanner, settings, tools
+from . import backups, cases, components, config, jobs, reports, dashboard, db, evidence, modules, scanner, settings, tools
 from .access import engine as access_engine, plugins as access_plugins, policy as access_policy
 from .diagnostics import engine
 from .recovery import engine as recovery_engine, sources as recovery_sources
@@ -109,8 +109,11 @@ METHODS: dict[str, Callable[[dict], object]] = {
                                                                    [str(x) for x in _p(p, "acknowledged", list, [])],
                                                                    _p(p, "result", str), _p(p, "notes", str, None)),
     "service.history": lambda p: service_engine.history(_p(p, "caseId", int, None), _p(p, "deviceSerial", str, None)),
+    "reports.sections": lambda p: [{"id": k, "label": v} for k, v in reports.SECTIONS.items()],
+    "reports.build": lambda p: reports.build(_p(p, "caseId", int), _p(p, "sections", list, None)),
+    "reports.register": lambda p: reports.register(_p(p, "caseId", int), [str(x) for x in _p(p, "paths", list)]),
+    "reports.list": lambda p: reports.list_reports(_p(p, "caseId", int)),
     # Operaciones de etapas posteriores: responden explícitamente "no implementado".
-    "reports.export": _not_impl("Exportación de reportes", "Etapa 6"),
 }
 
 

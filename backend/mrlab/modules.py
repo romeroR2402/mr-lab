@@ -7,8 +7,8 @@ MODULES = [
      "description": "Detección USB/red vía adb, fastboot y libimobiledevice."},
     {"id": "diagnostics", "name": "Diagnóstico de dispositivos", "stage": 1, "status": "implemented",
      "description": "Diagnóstico de solo lectura: batería, almacenamiento, pantalla, táctil, seguridad."},
-    {"id": "case-files", "name": "Gestión de expedientes", "stage": 1, "status": "partial",
-     "description": "Alta, consulta y cambio de estado de expedientes. Pendiente: adjuntar archivos exportados."},
+    {"id": "case-files", "name": "Gestión de expedientes", "stage": 1, "status": "implemented",
+     "description": "Alta, consulta, estado, operaciones realizadas, resultados y archivos exportados (respaldos y reportes)."},
     {"id": "evidence", "name": "Registro de evidencias", "stage": 1, "status": "implemented",
      "description": "Registro automático, de solo inserción, encadenado con SHA-256 y verificable."},
     {"id": "screen-recovery", "name": "Asistente de pantalla dañada", "stage": 2, "status": "implemented",
@@ -30,8 +30,8 @@ MODULES = [
     {"id": "reset-center", "name": "Asistente de restauración de fábrica", "stage": 5, "status": "implemented",
      "description": "Restauración de fábrica con advertencia, confirmación, registro y reporte.",
      "scope": ["Advertencia de pérdida de datos", "Confirmación explícita", "Registro y reporte"]},
-    {"id": "reports", "name": "Exportación y reportes", "stage": 6, "status": "planned",
-     "description": "Exportación de reportes de diagnóstico y expedientes (PDF/JSON)."},
+    {"id": "reports", "name": "Exportación y reportes", "stage": 6, "status": "implemented",
+     "description": "Reporte del expediente en PDF y JSON con diagnósticos, evaluaciones, respaldos, operaciones y evidencias."},
 ]
 
 

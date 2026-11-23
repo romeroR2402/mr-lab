@@ -49,5 +49,5 @@ class ScanDiagTests(TempDbCase):
     def test_unknown_and_not_implemented(self):
         srv = rpc.Server()
         self.assertEqual(srv.handle({"id": 1, "method": "nope"})["error"]["code"], "method_not_found")
-        self.assertEqual(srv.handle({"id": 2, "method": "reports.export"})["error"]["code"], "not_implemented")
+        self.assertEqual(srv.handle({"id": 2, "method": "reports.export"})["error"]["code"], "method_not_found")
         self.assertEqual(srv.handle({"id": 3, "method": "diagnostics.run", "params": {}})["error"]["code"], "invalid_params")

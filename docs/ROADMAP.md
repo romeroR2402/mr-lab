@@ -39,5 +39,7 @@ Implementado. Ver [SERVICIO.md](SERVICIO.md).
 Sideload de OTA oficial, modo recuperación, restauración asistida (Apple Devices/Finder, herramientas OEM).
 Restauración de fábrica solo por métodos del fabricante con advertencia, confirmación, registro y reporte.
 
-## Etapa 6 — Exportación y reportes
+## Etapa 6 — Exportación y reportes ✅
+Implementado. Ver [REPORTES.md](REPORTES.md).
+
 Reportes PDF/JSON de diagnóstico y expedientes, firma con hash, adjuntos al expediente.

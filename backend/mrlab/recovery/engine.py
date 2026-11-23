@@ -169,7 +169,7 @@ def create(params: dict) -> dict:
             shutil.rmtree(stage, ignore_errors=True)
 
     def on_error(job: jobs.Job, message: str) -> None:
-        evidence.log("Respaldo", "cancelled" if job.status == "cancelled" else "failure", case_id=case_id,
+        evidence.log("Respaldo", "cancelled" if job.final == "cancelled" else "failure", case_id=case_id,
                      device_serial=serial, device_label=label, error=message)
 
     return jobs.start("backup", f"Respaldo · {label}", run, on_error)

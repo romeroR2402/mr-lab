@@ -30,6 +30,7 @@ class Job:
     error: str | None = None
     started_at: str = field(default_factory=now_iso)
     finished_at: str | None = None
+    final: str | None = None
     _cancel: threading.Event = field(default_factory=threading.Event, repr=False)
 
     # API para el código del trabajo
@@ -59,25 +60,27 @@ def start(kind: str, title: str, fn: Callable[[Job], dict], on_error: Callable[[
         _jobs[job.id] = job
 
     def run():
+        final, error = "done", None
         try:
             job.result = fn(job)
-            job.status = "done"
-            job.phase = "Completado"
-            job.detail = None
-            job.progress = 1.0
         except RpcError as e:
-            job.status = "cancelled" if e.code == "cancelled" else "failed"
-            job.error = e.message
-            if on_error:
-                on_error(job, e.message)
+            final, error = ("cancelled" if e.code == "cancelled" else "failed"), e.message
         except Exception as e:  # pragma: no cover - errores inesperados
             traceback.print_exc(file=sys.stderr)
-            job.status = "failed"
-            job.error = f"Error interno: {e}"
-            if on_error:
-                on_error(job, job.error)
-        finally:
-            job.finished_at = now_iso()
+            final, error = "failed", f"Error interno: {e}"
+        if final != "done" and on_error:
+            job.error = error
+            job.final = final  # disponible para on_error antes de publicar el estado
+            try:
+                on_error(job, error or "")
+            except Exception:  # pragma: no cover
+                traceback.print_exc(file=sys.stderr)
+        # El estado se publica al final: quien lo lea ya encuentra todo registrado.
+        job.error = error
+        job.finished_at = now_iso()
+        if final == "done":
+            job.phase, job.detail, job.progress = "Completado", None, 1.0
+        job.status = final
 
     threading.Thread(target=run, name=f"job-{job.id}", daemon=True).start()
     return job.to_api()

@@ -339,6 +339,10 @@ export interface RpcMethods {
   "service.execute": [{ planId: string; confirmation: string; acknowledged: string[] }, Job];
   "service.recordGuided": [{ planId: string; confirmation: string; acknowledged: string[]; result: "success" | "failure"; notes?: string }, ServiceResult];
   "service.history": [{ caseId?: number; deviceSerial?: string }, ServiceHistoryItem[]];
+  "reports.sections": [Record<string, never>, { id: string; label: string }[]];
+  "reports.build": [{ caseId: number; sections?: string[] }, { html: string; json: string; pdf: string; folio: string; sections: string[] }];
+  "reports.register": [{ caseId: number; paths: string[] }, { files: { path: string; sha256: string; size: number; kind: string }[] }];
+  "reports.list": [{ caseId: number }, NonNullable<CaseRecord["files"]>];
   "evidence.verify": [Record<string, never>, { valid: boolean; checked: number; brokenAtId: number | null }];
 }
 
@@ -367,5 +371,6 @@ export interface MrLabBridge {
   openPath(path: string): Promise<string>;
   openAppleDevicesStore(): Promise<boolean>;
   pickSource(kind: "folder" | "zip"): Promise<string | null>;
+  reportToPdf(htmlPath: string): Promise<string>;
   appInfo(): Promise<{ version: string; platform: string; packaged: boolean }>;
 }

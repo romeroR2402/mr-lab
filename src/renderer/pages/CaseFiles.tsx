@@ -1,8 +1,9 @@
-import { FilePlus2, FolderKanban, ScrollText, ShieldCheck, X } from "lucide-react";
+import { FilePlus2, FolderKanban, FolderOpen, ScrollText, ShieldCheck, X } from "lucide-react";
+import CaseReport from "../components/CaseReport";
 import { FormEvent, useState } from "react";
 import type { CaseRecord } from "../../shared/types";
 import { Badge, Button, Card, Empty, ErrorBox, KV, PageHeader, Spinner } from "../components/ui";
-import { ApiError, call } from "../lib/api";
+import { ApiError, bridge, call } from "../lib/api";
 import { useLab } from "../lib/context";
 import { fmtDate } from "../lib/format";
 import { useRpc } from "../lib/hooks";
@@ -121,8 +122,22 @@ function CaseDetail({ id, onChanged }: { id: number; onChanged: () => void }) {
           ))}</ul>
         ) : <div className="text-sm text-lab-mute">Sin operaciones registradas.</div>}
       </Card>
-      <Card title="Archivos exportados">
-        <div className="text-sm text-lab-mute">{d.files?.length ? d.files.map((f) => f.path).join(", ") : "Sin archivos. La exportación se habilita con Recuperación de datos y Reportes (Etapas 3 y 6)."}</div>
+      <CaseReport caseId={id} onGenerated={() => { c.reload(); ev.reload(); onChanged(); }} />
+      <Card title={`Archivos exportados (${d.files?.length ?? 0})`}>
+        {d.files?.length ? (
+          <ul className="divide-y divide-lab-line">
+            {d.files.map((f) => (
+              <li key={f.id} className="flex items-start justify-between gap-3 py-2 first:pt-0 last:pb-0">
+                <div className="min-w-0">
+                  <div className="text-sm text-white">{f.description ?? "Archivo"}</div>
+                  <div className="break-all font-mono text-[11px] text-lab-mute">{f.path}</div>
+                  <div className="font-mono text-[10px] text-lab-mute/70" title={f.sha256 ?? ""}>{fmtDate(f.createdAt)} · SHA-256 {f.sha256?.slice(0, 16)}…</div>
+                </div>
+                <Button variant="ghost" onClick={() => bridge().openPath(f.path)}><FolderOpen className="h-4 w-4" /> Abrir</Button>
+              </li>
+            ))}
+          </ul>
+        ) : <div className="text-sm text-lab-mute">Sin archivos. Aquí aparecen las exportaciones de respaldos, los reportes de operaciones y el reporte del expediente.</div>}
       </Card>
       <Card title="Evidencias del expediente">
         <EvidenceTable entries={ev.data?.entries ?? []} />

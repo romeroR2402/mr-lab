@@ -9,7 +9,7 @@ y gestión de expedientes con registro de evidencias.
 > evasión de autenticación, bypass de cifrado, cracking de contraseñas ni extracción oculta,
 > y nunca simula resultados: lo que no está implementado se indica como tal.
 
-## Estado (Etapa 1)
+## Estado (Etapas 1–6 completas)
 
 | Módulo | Estado |
 |---|---|
@@ -18,16 +18,20 @@ y gestión de expedientes con registro de evidencias.
 | Diagnóstico de dispositivos (Android, bootloader, Apple) | ✅ Implementado |
 | Registro de evidencias (solo inserción + cadena SHA-256) | ✅ Implementado |
 | Componentes integrados y modo autónomo | ✅ Implementado |
-| Gestión de expedientes | 🟡 Parcial (falta adjuntar archivos exportados) |
+| Gestión de expedientes | ✅ Implementado |
 | Administrador de respaldos (verificar, explorar, exportar, eliminar) | ✅ Implementado |
 | Asistente de pantalla dañada (clasificación + recomendaciones) | ✅ Implementado |
 | Centro de recuperación de datos (Android ADB, Apple, importación) | ✅ Implementado |
 | Análisis y recuperación de acceso (mecanismos, restricciones, vías oficiales, compatibilidad, plugins) | ✅ Implementado |
 | Reparación de sistema / Restauración de fábrica (plan, confirmación, registro y reporte) | ✅ Implementado |
-| Exportación y reportes | ⏳ Etapa 6 |
+| Exportación y reportes (PDF y JSON del expediente) | ✅ Implementado |
 
 **Plataforma autónoma:** el instalador incluye sus propios motores y controladores, verificados por
 SHA-256; el técnico solo instala MR Lab. Detalles y límites en [docs/AUTONOMIA.md](docs/AUTONOMIA.md).
+
+## Instalar en Windows
+
+Descarga `MRLab-Setup-<versión>.exe` desde [Releases](https://github.com/romeroR2402/mr-lab/releases/latest) y ejecútalo.
 
 ## Inicio rápido (desarrollo)
 
@@ -42,6 +46,7 @@ Documentación:
 - [docs/INSTALL.md](docs/INSTALL.md) — instalación, requisitos y generación del instalador de Windows.
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — arquitectura, protocolo RPC, base de datos y seguridad.
 - [docs/AUTONOMIA.md](docs/AUTONOMIA.md) — componentes integrados y qué no puede eliminarse.
+- [docs/REPORTES.md](docs/REPORTES.md) — reportes del expediente en PDF y JSON.
 - [docs/SERVICIO.md](docs/SERVICIO.md) — reparación de sistema y restauración de fábrica.
 - [docs/DATOS.md](docs/DATOS.md) — recuperación de datos y respaldos cifrados.
 - [docs/PANTALLA.md](docs/PANTALLA.md) — asistente de pantalla dañada.

@@ -40,6 +40,7 @@ backend/
     backups.py       Verificación, exploración, exportación y eliminación de respaldos
     jobs.py          Trabajos en segundo plano con progreso y cancelación
     service/         Reparación y restauración: catálogo, plan/confirmación, ejecución y reporte HTML
+    reports.py       Reporte del expediente (HTML/JSON) y registro de los archivos generados
     screen/          Asistente de pantalla dañada: cuestionario y motor de clasificación
     access/          Análisis de acceso: policy, analyzers, knowledge, compat, plugins, engine
   tests/             Pruebas unitarias y de integración (adb falso solo para pruebas)
@@ -69,7 +70,7 @@ rechaza llamadas pendientes si el backend termina y lo reinicia automáticamente
 | `screen.questionnaire`, `.assess`, `.history`, `.get` | Asistente de pantalla dañada (ver PANTALLA.md) |
 | `access.analyze`, `.history`, `.get`, `.procedures`, `.plugins`, `.setPlugin` | Análisis de acceso (ver ACCESO.md) |
 | `service.operations`, `.packages`, `.plan`, `.execute`, `.recordGuided`, `.history` | Reparación y restauración (ver SERVICIO.md) |
-| `reports.export` | Responden `not_implemented` con la etapa planificada |
+| `reports.sections`, `.build`, `.register`, `.list` | Reporte del expediente en HTML/JSON; Electron lo convierte a PDF (ver REPORTES.md) |
 
 ## Base de datos (SQLite)
 

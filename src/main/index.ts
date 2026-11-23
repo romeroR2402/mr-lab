@@ -1,5 +1,5 @@
 import { app, BrowserWindow, dialog, ipcMain, shell } from "electron";
-import { mkdirSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { BackendBridge } from "./backend";
 
@@ -73,6 +73,36 @@ ipcMain.handle("dialog:pickSource", async (_e, kind: unknown) => {
     filters: folder ? undefined : [{ name: "Archivo ZIP", extensions: ["zip"] }],
   });
   return r.canceled ? null : r.filePaths[0] ?? null;
+});
+
+// Convierte un reporte HTML generado por el backend en PDF (A4) con el motor de Chromium.
+ipcMain.handle("report:toPdf", async (_e, htmlPath: unknown) => {
+  const exportsDir = resolve(dataDir, "exports");
+  if (typeof htmlPath !== "string" || !resolve(htmlPath).startsWith(exportsDir) || !htmlPath.toLowerCase().endsWith(".html")) {
+    throw new Error("Ruta de reporte no permitida");
+  }
+  const pdfWin = new BrowserWindow({
+    show: false,
+    webPreferences: { javascript: false, sandbox: true, contextIsolation: true, nodeIntegration: false },
+  });
+  try {
+    await pdfWin.loadFile(htmlPath);
+    const pdf = await pdfWin.webContents.printToPDF({
+      pageSize: "A4",
+      printBackground: true,
+      displayHeaderFooter: true,
+      headerTemplate: "<span></span>",
+      footerTemplate:
+        '<div style="font-size:8px;color:#64748b;width:100%;padding:0 14mm;display:flex;justify-content:space-between">' +
+        '<span>Mobile Recovery Lab</span><span>Página <span class="pageNumber"></span> de <span class="totalPages"></span></span></div>',
+      margins: { top: 0.6, bottom: 0.7, left: 0.55, right: 0.55 },
+    });
+    const pdfPath = htmlPath.replace(/\.html$/i, ".pdf");
+    writeFileSync(pdfPath, pdf);
+    return pdfPath;
+  } finally {
+    pdfWin.destroy();
+  }
 });
 
 // Única URL externa permitida: la ficha oficial de Apple Devices en Microsoft Store.
