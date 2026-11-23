@@ -36,6 +36,9 @@ backend/
     tools.py         Resolución de herramientas (personalizada → integrada → sistema)
     components.py    Verificación SHA-256 de los componentes integrados
     modules.py       Estado de implementación de cada módulo
+    recovery/        Fuentes autorizadas, clasificación y creación de respaldos cifrados
+    backups.py       Verificación, exploración, exportación y eliminación de respaldos
+    jobs.py          Trabajos en segundo plano con progreso y cancelación
     screen/          Asistente de pantalla dañada: cuestionario y motor de clasificación
     access/          Análisis de acceso: policy, analyzers, knowledge, compat, plugins, engine
   tests/             Pruebas unitarias y de integración (adb falso solo para pruebas)
@@ -59,9 +62,12 @@ rechaza llamadas pendientes si el backend termina y lo reinicia automáticamente
 | `dashboard.summary` | Datos agregados del Overview |
 | `cases.list`, `.get`, `.create`, `.updateStatus` | Expedientes |
 | `evidence.list`, `evidence.verify` | Registro de evidencias e integridad |
+| `recovery.folders`, `.scan`, `.start` | Centro de recuperación de datos (ver DATOS.md) |
+| `backups.list`, `.get`, `.browse`, `.verify`, `.export`, `.delete` | Administrador de respaldos |
+| `jobs.list`, `.get`, `.cancel` | Trabajos de larga duración con progreso |
 | `screen.questionnaire`, `.assess`, `.history`, `.get` | Asistente de pantalla dañada (ver PANTALLA.md) |
 | `access.analyze`, `.history`, `.get`, `.procedures`, `.plugins`, `.setPlugin` | Análisis de acceso (ver ACCESO.md) |
-| `recovery.start`, `backup.create`, `repair.start`, `reset.prepare`, `reports.export` | Responden `not_implemented` con la etapa planificada |
+| `repair.start`, `reset.prepare`, `reports.export` | Responden `not_implemented` con la etapa planificada |
 
 ## Base de datos (SQLite)
 
