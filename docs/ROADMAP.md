@@ -12,7 +12,9 @@
 - Componentes integrados (motores Android/Apple, controlador USB) con verificación SHA-256 y modo autónomo. ✅
 - Instalador NSIS y documentación. ✅
 
-## Etapa 2 — Asistente de pantalla dañada
+## Etapa 2 — Asistente de pantalla dañada ✅
+Implementado. Ver [PANTALLA.md](PANTALLA.md).
+
 Cuestionario de síntomas + correlación con diagnóstico (display/táctil/USB/autorización/respaldo previo) →
 clasificación en: visible y táctil funcional; visible con táctil defectuoso; pantalla negra; display parcial;
 sin respuesta; comunicación USB disponible; respaldo previo disponible. Recomendaciones técnicas por caso

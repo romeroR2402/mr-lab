@@ -1,6 +1,7 @@
 import { Activity, Archive, FolderKanban, KeyRound, MonitorSmartphone, Plug, RefreshCw, ShieldCheck, Smartphone, Wrench } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 import { SOURCE_LABEL } from "../components/ComponentsPanel";
+import { CATEGORY_TONE } from "./ScreenRecovery";
 import { Badge, Button, Card, Dot, Empty, ErrorBox, KV, PageHeader, Spinner, StatusBadge, StatusIcon } from "../components/ui";
 import { useLab } from "../lib/context";
 import { fmtDate, maskId } from "../lib/format";
@@ -88,7 +89,10 @@ export default function Dashboard() {
         </Tile>
 
         <Tile label="Tipo de pantalla" icon={<MonitorSmartphone className="h-3.5 w-3.5" />}
-          footer="Clasificación de daño: módulo Pantalla dañada (Etapa 2)">
+          footer={s?.screenAssessment ? <>Evaluación #{s.screenAssessment.id} · {fmtDate(s.screenAssessment.timestamp)}</> : <button className="underline" onClick={() => navigate("screen-recovery")}>Evaluar daño de pantalla</button>}>
+          {s?.screenAssessment && (
+            <div className="mb-2"><Badge tone={CATEGORY_TONE[s.screenAssessment.category]}>{s.screenAssessment.categoryLabel}</Badge></div>
+          )}
           {display && display.status !== "unavailable" ? (
             <KV items={[
               ["Resolución", display.value],

@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import Devices from "./pages/Devices";
 import Diagnostics from "./pages/Diagnostics";
 import PlannedModule from "./pages/PlannedModule";
+import ScreenRecovery from "./pages/ScreenRecovery";
 import SettingsPage from "./pages/Settings";
 
 export default function App() {
@@ -86,10 +87,11 @@ export default function App() {
             {page === "overview" && <Dashboard />}
             {page === "devices" && <Devices />}
             {page === "diagnostics" && <Diagnostics />}
+            {page === "screen-recovery" && <ScreenRecovery />}
             {page === "access-recovery" && <AccessRecovery />}
             {page === "case-files" && <CaseFiles />}
             {page === "settings" && <SettingsPage />}
-            {["screen-recovery", "data-recovery", "backup-manager", "system-repair", "reset-center"].includes(page) && (
+            {["data-recovery", "backup-manager", "system-repair", "reset-center"].includes(page) && (
               <PlannedModule moduleId={page} />
             )}
           </div>

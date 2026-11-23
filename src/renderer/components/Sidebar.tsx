@@ -13,7 +13,7 @@ export const NAV: { id: PageId; label: string; icon: typeof Activity; stage?: nu
   { id: "overview", label: "Resumen", icon: LayoutDashboard },
   { id: "devices", label: "Dispositivos", icon: Smartphone },
   { id: "diagnostics", label: "Diagnóstico", icon: Activity },
-  { id: "screen-recovery", label: "Pantalla dañada", icon: MonitorSmartphone, stage: 2 },
+  { id: "screen-recovery", label: "Pantalla dañada", icon: MonitorSmartphone },
   { id: "data-recovery", label: "Recuperación de datos", icon: Archive, stage: 3 },
   { id: "backup-manager", label: "Respaldos", icon: DatabaseBackup, stage: 3 },
   { id: "access-recovery", label: "Recuperación de acceso", icon: KeyRound },

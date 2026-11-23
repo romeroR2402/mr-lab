@@ -170,6 +170,7 @@ export interface DashboardSummary {
   scanErrors: string[];
   lastDiagnostic: DiagnosticReport | null;
   screen: { display: DiagnosticCheck | null; touch: DiagnosticCheck | null } | null;
+  screenAssessment: { id: number; category: ScreenCategory; categoryLabel: string; timestamp: string } | null;
   recoveryChannels: RecoveryChannel[];
   recentCases: CaseRecord[];
   caseStats: { total: number; byStatus: Record<string, number> };
@@ -224,6 +225,31 @@ export interface AccessPlugin {
   platforms: string[]; builtin: boolean; path: string | null; enabled: boolean; error: string | null; loaded: boolean;
 }
 
+export type ScreenCategory = "visible_touch_ok" | "visible_touch_faulty" | "black_screen" | "partial_display" | "no_response" | "undetermined";
+
+export interface ScreenQuestion {
+  id: string; label: string; help?: string; default: string; options: { value: string; label: string }[];
+}
+export interface ScreenSignals {
+  deviceConnected: boolean; usb: boolean | null; authorized: boolean | null; platform: Platform | null;
+  displayPower: string | null; touchDriver: boolean | null; battery: string | null; diagnosticId: number | null; commState: string | null;
+}
+export interface ScreenRecommendation {
+  id: string; title: string; priority: 1 | 2 | 3 | 4; category: string; steps: string[]; requirements: string[];
+  risks: string[]; module: string | null; implemented: boolean | null;
+}
+export interface ScreenAssessment {
+  id: number; timestamp: string; deviceKey: string | null; deviceLabel: string; deviceSerial: string | null; caseId: number | null;
+  category: ScreenCategory; categoryLabel: string; summary: string;
+  flags: { id: string; label: string; state: string; detail: string | null }[];
+  notes: { level: "info" | "warning"; text: string }[];
+  signals: ScreenSignals; answers: Record<string, string>; recommendations: ScreenRecommendation[];
+}
+export interface ScreenHistoryItem {
+  id: number; timestamp: string; deviceSerial: string | null; deviceLabel: string | null; caseId: number | null;
+  category: ScreenCategory; categoryLabel: string;
+}
+
 /** Mapa método RPC -> [params, resultado]. */
 export interface RpcMethods {
   "system.health": [Record<string, never>, HealthInfo];
@@ -249,6 +275,10 @@ export interface RpcMethods {
   "access.procedures": [Record<string, never>, { id: string; title: string; platforms: string[]; checks: string[] }[]];
   "access.plugins": [Record<string, never>, { plugins: AccessPlugin[]; directory: string; allowedCapabilities: string[] }];
   "access.setPlugin": [{ id: string; enabled: boolean }, AccessPlugin[]];
+  "screen.questionnaire": [Record<string, never>, ScreenQuestion[]];
+  "screen.assess": [{ answers: Record<string, string>; deviceKey?: string | null; caseId?: number | null; deviceLabel?: string }, ScreenAssessment];
+  "screen.history": [{ deviceSerial?: string }, ScreenHistoryItem[]];
+  "screen.get": [{ id: number }, ScreenAssessment];
   "evidence.verify": [Record<string, never>, { valid: boolean; checked: number; brokenAtId: number | null }];
 }
 

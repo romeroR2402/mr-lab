@@ -13,6 +13,7 @@ from typing import Callable
 from . import cases, components, config, dashboard, db, evidence, modules, scanner, settings, tools
 from .access import engine as access_engine, plugins as access_plugins, policy as access_policy
 from .diagnostics import engine
+from .screen import engine as screen_engine, questionnaire as screen_questions
 from .errors import NotImplementedOperation, RpcError
 
 
@@ -71,8 +72,12 @@ METHODS: dict[str, Callable[[dict], object]] = {
     "access.plugins": lambda p: {"plugins": access_plugins.list_plugins(), "directory": str(access_plugins.plugins_dir()),
                                  "allowedCapabilities": sorted(access_policy.ALLOWED_CAPABILITIES)},
     "access.setPlugin": lambda p: access_plugins.set_enabled(_p(p, "id", str), _p(p, "enabled", bool)),
+    "screen.questionnaire": lambda p: screen_questions.schema(),
+    "screen.assess": lambda p: screen_engine.assess(_p(p, "answers", dict), _p(p, "deviceKey", str, None),
+                                                    _p(p, "caseId", int, None), _p(p, "deviceLabel", str, None)),
+    "screen.history": lambda p: screen_engine.history(_p(p, "deviceSerial", str, None)),
+    "screen.get": lambda p: screen_engine.get(_p(p, "id", int)),
     # Operaciones de etapas posteriores: responden explícitamente "no implementado".
-    "screen.classify": _not_impl("Clasificación de pantalla", "Etapa 2"),
     "recovery.start": _not_impl("Recuperación de datos", "Etapa 3"),
     "backup.create": _not_impl("Creación de respaldo", "Etapa 3"),
     "repair.start": _not_impl("Reparación de sistema", "Etapa 5"),

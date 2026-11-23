@@ -126,6 +126,19 @@ MIGRATIONS: list[str] = [
         enabled   INTEGER NOT NULL
     );
     """,
+    # v3: asistente de pantalla dañada
+    """
+    CREATE TABLE screen_assessments (
+        id            INTEGER PRIMARY KEY AUTOINCREMENT,
+        timestamp     TEXT NOT NULL,
+        device_serial TEXT,
+        device_label  TEXT,
+        case_id       INTEGER REFERENCES cases(id),
+        category      TEXT NOT NULL,
+        report_json   TEXT NOT NULL
+    );
+    CREATE INDEX idx_screen_serial ON screen_assessments(device_serial);
+    """,
 ]
 
 

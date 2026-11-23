@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from . import cases, evidence, scanner, tools
 from .diagnostics import engine
+from .screen import engine as screen_engine
 
 
 def summary() -> dict:
@@ -14,6 +15,7 @@ def summary() -> dict:
         disp = next((c for c in diag["checks"] if c["id"] == "display"), None)
         touch = next((c for c in diag["checks"] if c["id"] == "touch"), None)
         screen = {"display": disp, "touch": touch}
+    assessment = screen_engine.latest_for(primary["serial"]) if primary else None
     t = tools.detect()
     return {
         "primaryDevice": primary,
@@ -22,6 +24,8 @@ def summary() -> dict:
         "scanErrors": scan.get("errors") or [],
         "lastDiagnostic": diag,
         "screen": screen,
+        "screenAssessment": {"id": assessment["id"], "category": assessment["category"], "categoryLabel": assessment["categoryLabel"],
+                             "timestamp": assessment["timestamp"]} if assessment else None,
         "recoveryChannels": engine.recovery_channels(primary) if primary else [],
         "recentCases": cases.list_cases(limit=6),
         "caseStats": cases.stats(),

@@ -20,7 +20,7 @@ y gestión de expedientes con registro de evidencias.
 | Componentes integrados y modo autónomo | ✅ Implementado |
 | Gestión de expedientes | 🟡 Parcial (falta adjuntar archivos exportados) |
 | Administrador de respaldos | 🟡 Motor de cifrado AES-256-GCM listo; gestión pendiente |
-| Asistente de pantalla dañada | ⏳ Etapa 2 |
+| Asistente de pantalla dañada (clasificación + recomendaciones) | ✅ Implementado |
 | Centro de recuperación de datos | ⏳ Etapa 3 |
 | Análisis y recuperación de acceso (mecanismos, restricciones, vías oficiales, compatibilidad, plugins) | ✅ Implementado |
 | Reparación de sistema / Restauración de fábrica | ⏳ Etapa 5 |
@@ -42,5 +42,6 @@ Documentación:
 - [docs/INSTALL.md](docs/INSTALL.md) — instalación, requisitos y generación del instalador de Windows.
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — arquitectura, protocolo RPC, base de datos y seguridad.
 - [docs/AUTONOMIA.md](docs/AUTONOMIA.md) — componentes integrados y qué no puede eliminarse.
+- [docs/PANTALLA.md](docs/PANTALLA.md) — asistente de pantalla dañada.
 - [docs/ACCESO.md](docs/ACCESO.md) — módulo de análisis de acceso y guía de plugins.
 - [docs/ROADMAP.md](docs/ROADMAP.md) — plan por etapas.
