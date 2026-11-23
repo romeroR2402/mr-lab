@@ -189,6 +189,41 @@ export interface HealthInfo {
   python: string;
 }
 
+export type Recoverability = "likely" | "conditional" | "unlikely" | "unknown";
+
+export interface AuthMechanism {
+  id: string; label: string; present: "yes" | "no" | "unknown"; kind: string | null; detail: string | null; source: string | null;
+}
+export interface AccessRestriction {
+  id: string; label: string; status: "active" | "inactive" | "partial" | "unknown"; severity: "info" | "medium" | "high" | "blocker"; detail: string | null;
+}
+export interface RecoveryOption {
+  id: string; title: string; channel: string; applicability: "applicable" | "conditional" | "not_applicable" | "blocked" | "unknown";
+  dataLoss: "none" | "possible" | "full_wipe" | "unknown"; requirements: string[]; steps: string[]; warnings: string[];
+  reason: string | null; officialUrl: string | null;
+}
+export interface CompatResult {
+  procedureId: string; title: string; verdict: "compatible" | "incompatible" | "undetermined";
+  checks: { id: string; label: string; result: "pass" | "fail" | "unknown" | "not_applicable"; detail: string | null }[];
+}
+export interface PluginFinding {
+  pluginId: string; pluginName: string; title: string; severity: "info" | "low" | "medium" | "high"; detail: string | null;
+  data: Record<string, string | number | null>;
+}
+export interface AccessAnalysis {
+  id: number; deviceKey: string; deviceLabel: string; platform: Platform; timestamp: string; summary: string;
+  recoverability: Recoverability; caseId: number | null; mechanisms: AuthMechanism[]; restrictions: AccessRestriction[];
+  options: RecoveryOption[]; compatibility: CompatResult[]; findings: PluginFinding[]; limitations: string[]; disclaimer: string;
+}
+export interface AccessHistoryItem {
+  id: number; timestamp: string; platform: Platform; deviceSerial: string; deviceLabel: string | null; caseId: number | null;
+  recoverability: Recoverability;
+}
+export interface AccessPlugin {
+  id: string; name: string; version: string; author: string; description: string; capabilities: string[];
+  platforms: string[]; builtin: boolean; path: string | null; enabled: boolean; error: string | null; loaded: boolean;
+}
+
 /** Mapa método RPC -> [params, resultado]. */
 export interface RpcMethods {
   "system.health": [Record<string, never>, HealthInfo];
@@ -208,6 +243,12 @@ export interface RpcMethods {
   "cases.create": [Record<string, unknown>, CaseRecord];
   "cases.updateStatus": [{ id: number; status: string; results?: string }, CaseRecord];
   "evidence.list": [{ limit?: number; offset?: number; caseId?: number }, { total: number; entries: EvidenceEntry[] }];
+  "access.analyze": [{ deviceKey: string; caseId?: number | null }, AccessAnalysis];
+  "access.history": [{ deviceSerial?: string }, AccessHistoryItem[]];
+  "access.get": [{ id: number }, AccessAnalysis];
+  "access.procedures": [Record<string, never>, { id: string; title: string; platforms: string[]; checks: string[] }[]];
+  "access.plugins": [Record<string, never>, { plugins: AccessPlugin[]; directory: string; allowedCapabilities: string[] }];
+  "access.setPlugin": [{ id: string; enabled: boolean }, AccessPlugin[]];
   "evidence.verify": [Record<string, never>, { valid: boolean; checked: number; brokenAtId: number | null }];
 }
 

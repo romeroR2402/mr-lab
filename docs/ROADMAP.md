@@ -23,9 +23,11 @@ Copia del almacenamiento compartido vía `adb pull` (dispositivo autorizado), re
 `idevicebackup2`, importación de respaldos/carpetas, clasificación (fotos, videos, documentos, archivos,
 contactos cuando la interfaz lo permita), visor, exportación con hash SHA-256 y cifrado AES-256-GCM.
 
-## Etapa 4 — Asistente de recuperación de acceso
-Guías por fabricante: recuperación de cuenta Google / Apple ID, Find My Device / Buscar, respaldos existentes,
-restauración y contacto con soporte. Requisitos, advertencias y pasos; sin evasión de autenticación.
+## Etapa 4 — Análisis y recuperación de acceso ✅
+Detección de mecanismos de autenticación y restricciones por interfaces oficiales, evaluación de vías oficiales
+(cuenta Google / Apple ID, Find My, restauración, respaldos, MDM, soporte del fabricante, asistencia por OTG/video),
+motor de compatibilidad, escenarios con pantalla/táctil dañados y plugins de solo análisis con barreras de política.
+Ver [ACCESO.md](ACCESO.md). Pendiente: ampliar el catálogo por fabricante (Samsung, Xiaomi, Motorola…).
 
 ## Etapa 5 — Reparación de sistema y restauración de fábrica
 Sideload de OTA oficial, modo recuperación, restauración asistida (Apple Devices/Finder, herramientas OEM).

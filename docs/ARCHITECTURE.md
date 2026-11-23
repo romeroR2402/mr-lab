@@ -36,6 +36,7 @@ backend/
     tools.py         Resolución de herramientas (personalizada → integrada → sistema)
     components.py    Verificación SHA-256 de los componentes integrados
     modules.py       Estado de implementación de cada módulo
+    access/          Análisis de acceso: policy, analyzers, knowledge, compat, plugins, engine
   tests/             Pruebas unitarias y de integración (adb falso solo para pruebas)
 ```
 
@@ -57,6 +58,7 @@ rechaza llamadas pendientes si el backend termina y lo reinicia automáticamente
 | `dashboard.summary` | Datos agregados del Overview |
 | `cases.list`, `.get`, `.create`, `.updateStatus` | Expedientes |
 | `evidence.list`, `evidence.verify` | Registro de evidencias e integridad |
+| `access.analyze`, `.history`, `.get`, `.procedures`, `.plugins`, `.setPlugin` | Análisis de acceso (ver ACCESO.md) |
 | `screen.classify`, `recovery.start`, `backup.create`, `repair.start`, `reset.prepare`, `reports.export` | Responden `not_implemented` con la etapa planificada |
 
 ## Base de datos (SQLite)

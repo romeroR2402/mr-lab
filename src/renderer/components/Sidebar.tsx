@@ -16,7 +16,7 @@ export const NAV: { id: PageId; label: string; icon: typeof Activity; stage?: nu
   { id: "screen-recovery", label: "Pantalla dañada", icon: MonitorSmartphone, stage: 2 },
   { id: "data-recovery", label: "Recuperación de datos", icon: Archive, stage: 3 },
   { id: "backup-manager", label: "Respaldos", icon: DatabaseBackup, stage: 3 },
-  { id: "access-recovery", label: "Recuperación de acceso", icon: KeyRound, stage: 4 },
+  { id: "access-recovery", label: "Recuperación de acceso", icon: KeyRound },
   { id: "system-repair", label: "Reparación de sistema", icon: Wrench, stage: 5 },
   { id: "reset-center", label: "Restauración de fábrica", icon: RotateCcw, stage: 5 },
   { id: "case-files", label: "Expedientes", icon: FolderKanban },

@@ -107,6 +107,25 @@ MIGRATIONS: list[str] = [
     CREATE INDEX idx_evidence_case ON evidence_log(case_id);
     CREATE INDEX idx_diag_serial ON diagnostic_reports(device_serial);
     """,
+    # v2: módulo de análisis y recuperación de acceso
+    """
+    CREATE TABLE access_analyses (
+        id             INTEGER PRIMARY KEY AUTOINCREMENT,
+        timestamp      TEXT NOT NULL,
+        platform       TEXT NOT NULL,
+        device_serial  TEXT NOT NULL,
+        device_label   TEXT,
+        case_id        INTEGER REFERENCES cases(id),
+        recoverability TEXT NOT NULL,
+        report_json    TEXT NOT NULL
+    );
+    CREATE INDEX idx_access_serial ON access_analyses(device_serial);
+
+    CREATE TABLE access_plugin_state (
+        plugin_id TEXT PRIMARY KEY,
+        enabled   INTEGER NOT NULL
+    );
+    """,
 ]
 
 

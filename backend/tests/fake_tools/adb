@@ -15,7 +15,8 @@ if a[:1] == ["-s"] and a[2] == "shell":
     if cmd == "getprop":
         for k, v in {"ro.product.manufacturer": "samsung", "ro.product.model": "SM-A525F", "ro.product.device": "a52q",
                      "ro.build.version.release": "14", "ro.build.version.sdk": "34", "ro.crypto.state": "encrypted",
-                     "ro.crypto.type": "file", "ro.boot.verifiedbootstate": "green", "ro.boot.flash.locked": "1"}.items():
+                     "ro.crypto.type": "file", "ro.boot.verifiedbootstate": "green", "ro.boot.flash.locked": "1",
+                     "ro.build.version.security_patch": "2024-03-01"}.items():
             print(f"[{k}]: [{v}]")
     elif cmd == "dumpsys battery":
         print("Current Battery Service state:\n  AC powered: false\n  USB powered: true\n  status: 2\n  health: 2\n  level: 54\n  scale: 100\n  voltage: 3912\n  temperature: 312\n  technology: Li-ion")
@@ -33,6 +34,10 @@ if a[:1] == ["-s"] and a[2] == "shell":
         print("Event Hub State:\n  Devices:\n    -1: Virtual\n      Classes: KEYBOARD | ALPHAKEY\n    3: sec_touchscreen\n      Classes: TOUCH | TOUCH_MT\n")
     elif cmd == "cat /proc/uptime":
         print("7384.12 20000.00")
+    elif cmd == "locksettings get-disabled":
+        print("false")
+    elif cmd == "dumpsys device_policy":
+        print("Device policy state:\n  Enabled Device Admins (User 0):\n")
     elif cmd == "settings get global wifi_on":
         print("1")
     sys.exit(0)

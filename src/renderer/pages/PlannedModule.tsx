@@ -4,9 +4,6 @@ import { useLab } from "../lib/context";
 import { useRpc } from "../lib/hooks";
 
 const NOTES: Record<string, string> = {
-  "access-recovery":
-    "Este módulo solo guiará por mecanismos oficiales del fabricante (recuperación de cuenta Google/Apple ID, respaldos existentes, restauración y soporte técnico). " +
-    "No incluye ni incluirá evasión de autenticación, bypass de cifrado, cracking de contraseñas ni extracción oculta.",
   "reset-center":
     "Antes de cualquier restauración se mostrará advertencia de pérdida de datos, se solicitará confirmación explícita, se registrará la operación con el método utilizado y se generará un reporte.",
   "data-recovery": "Solo se trabajará con datos accesibles mediante interfaces autorizadas por el titular (ADB autorizado, respaldos oficiales, fuentes importadas).",

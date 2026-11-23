@@ -3,6 +3,7 @@ import type { BackendStatus, ScanResult, Settings } from "../shared/types";
 import { PageId, Sidebar } from "./components/Sidebar";
 import { ApiError, call } from "./lib/api";
 import { Ctx, LabContext } from "./lib/context";
+import AccessRecovery from "./pages/AccessRecovery";
 import CaseFiles from "./pages/CaseFiles";
 import Dashboard from "./pages/Dashboard";
 import Devices from "./pages/Devices";
@@ -85,9 +86,10 @@ export default function App() {
             {page === "overview" && <Dashboard />}
             {page === "devices" && <Devices />}
             {page === "diagnostics" && <Diagnostics />}
+            {page === "access-recovery" && <AccessRecovery />}
             {page === "case-files" && <CaseFiles />}
             {page === "settings" && <SettingsPage />}
-            {["screen-recovery", "data-recovery", "backup-manager", "access-recovery", "system-repair", "reset-center"].includes(page) && (
+            {["screen-recovery", "data-recovery", "backup-manager", "system-repair", "reset-center"].includes(page) && (
               <PlannedModule moduleId={page} />
             )}
           </div>

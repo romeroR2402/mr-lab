@@ -11,6 +11,7 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import Callable
 
 from . import cases, components, config, dashboard, db, evidence, modules, scanner, settings, tools
+from .access import engine as access_engine, plugins as access_plugins, policy as access_policy
 from .diagnostics import engine
 from .errors import NotImplementedOperation, RpcError
 
@@ -63,6 +64,13 @@ METHODS: dict[str, Callable[[dict], object]] = {
     "cases.updateStatus": lambda p: cases.update_status(_p(p, "id", int), _p(p, "status", str), _p(p, "results", str, None)),
     "evidence.list": lambda p: evidence.list_entries(_p(p, "limit", int, 200), _p(p, "offset", int, 0), _p(p, "caseId", int, None)),
     "evidence.verify": lambda p: evidence.verify_chain(),
+    "access.analyze": lambda p: access_engine.analyze(_p(p, "deviceKey", str), _p(p, "caseId", int, None)),
+    "access.history": lambda p: access_engine.history(_p(p, "deviceSerial", str, None)),
+    "access.get": lambda p: access_engine.get(_p(p, "id", int)),
+    "access.procedures": lambda p: access_engine.procedures(),
+    "access.plugins": lambda p: {"plugins": access_plugins.list_plugins(), "directory": str(access_plugins.plugins_dir()),
+                                 "allowedCapabilities": sorted(access_policy.ALLOWED_CAPABILITIES)},
+    "access.setPlugin": lambda p: access_plugins.set_enabled(_p(p, "id", str), _p(p, "enabled", bool)),
     # Operaciones de etapas posteriores: responden explícitamente "no implementado".
     "screen.classify": _not_impl("Clasificación de pantalla", "Etapa 2"),
     "recovery.start": _not_impl("Recuperación de datos", "Etapa 3"),
