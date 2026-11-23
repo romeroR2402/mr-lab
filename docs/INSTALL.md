@@ -119,7 +119,7 @@ Respaldar esta carpeta conserva todo el historial. MR Lab no envía datos a serv
 El flujo `.github/workflows/release.yml` compila el instalador en una máquina Windows de GitHub:
 pruebas del backend → integración del motor Android y del controlador USB → PyInstaller → electron-builder.
 
-- Al subir una etiqueta `v*` (por ejemplo `git tag v0.2.0 && git push origin v0.2.0`) publica el
-  instalador en **Releases** del repositorio.
+- Al publicar una versión en **Releases** (o subir una etiqueta `v*`), compila el instalador y lo
+  adjunta a esa versión para descargarlo.
 - También puede lanzarse a mano desde la pestaña **Actions** («Run workflow»); en ese caso el `.exe`
   queda como artefacto descargable de la ejecución.
