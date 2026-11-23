@@ -4,7 +4,7 @@ a = Analysis(
     ["run_backend.py"],
     pathex=["."],
     hiddenimports=["cryptography.hazmat.primitives.ciphers.aead", "cryptography.hazmat.primitives.kdf.scrypt"],
-    excludes=["tkinter", "unittest", "tests"],
+    excludes=["tkinter", "tests"],
 )
 pyz = PYZ(a.pure)
 exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name="mrlab-backend", console=True, upx=False)  # consola oculta por Electron (windowsHide)

@@ -113,3 +113,13 @@ Respaldar esta carpeta conserva todo el historial. MR Lab no envía datos a serv
 | Dispositivo Apple "No emparejado" / "Bloqueado" | El titular debe desbloquear y confiar en el equipo. |
 | Servicio USB de Apple inactivo | Pulse **Instalar** en Configuración (abre Apple Devices en Microsoft Store). |
 | "Servicios locales no disponibles" | En desarrollo, verifique Python en PATH o `MRLAB_PYTHON`. En el instalador, reinstale. |
+
+## 7. Instalador automático (GitHub Actions)
+
+El flujo `.github/workflows/release.yml` compila el instalador en una máquina Windows de GitHub:
+pruebas del backend → integración del motor Android y del controlador USB → PyInstaller → electron-builder.
+
+- Al subir una etiqueta `v*` (por ejemplo `git tag v0.2.0 && git push origin v0.2.0`) publica el
+  instalador en **Releases** del repositorio.
+- También puede lanzarse a mano desde la pestaña **Actions** («Run workflow»); en ese caso el `.exe`
+  queda como artefacto descargable de la ejecución.

@@ -32,6 +32,8 @@ class ComponentTests(TempDbCase):
         super().tearDown()
 
     def test_integrated_preferred_and_verified(self):
+        if os.name == "nt":
+            self.skipTest("el ejecutable de prueba es un script POSIX")
         self.assertEqual(components.status()["components"][0]["status"], "ok")
         path, source = tools.locate("adb")
         self.assertEqual((path, source), (str(self.adb), "integrated"))

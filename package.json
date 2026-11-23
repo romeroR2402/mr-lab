@@ -18,7 +18,7 @@
     "typecheck": "tsc -p tsconfig.main.json --noEmit && tsc -p tsconfig.renderer.json --noEmit",
     "test:backend": "cd backend && python -m unittest discover -s tests -t .",
     "build:backend": "cd backend && pyinstaller --noconfirm --clean mrlab-backend.spec",
-    "dist:win": "npm run build && electron-builder --win nsis --x64",
+    "dist:win": "npm run build && electron-builder --win nsis --x64 --publish never",
     "start": "electron ."
   },
   "dependencies": {
